@@ -1,6 +1,6 @@
 name: yousentech_pos_loading_synchronizing_data
 description: "A new Flutter package project."
-version: 0.0.1
+version: 1.0.0
 homepage:
 
 environment:
@@ -31,8 +31,8 @@ dependencies:
     git:
       url: https://github.com/YousenTech-Flutter/yousentech_authentication.git
       ref: master
-  crypto: ^3.0.3  
-  flutter_screenutil: ^5.9.3 
+  crypto: ^3.0.3
+  flutter_screenutil: ^5.9.3
 
 dev_dependencies:
   flutter_test:
