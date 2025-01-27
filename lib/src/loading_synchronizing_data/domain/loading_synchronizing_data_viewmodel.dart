@@ -48,7 +48,8 @@ class LoadingDataController extends GetxController {
   GeneralLocalDB? _instance;
 
   int count = 0;
-  late LoadingSynchronizingDataService loadingSynchronizingDataService = LoadingSynchronizingDataService();
+  late LoadingSynchronizingDataService loadingSynchronizingDataService =
+      LoadingSynchronizingDataService();
   List<int> posCategoryIdsList = [];
   // change
   // final ItemHistoryController _itemHistoryController = ItemHistoryController();
@@ -86,7 +87,8 @@ class LoadingDataController extends GetxController {
   // =================================================== [ LOADING CURRENT POS SETTING ] ==========================================================
   Future<dynamic> loadingCurrentPosSetting({required int posSettingId}) async {
     isLoad.value = true;
-    dynamic result = await loadingSynchronizingDataService.loadCurrentUserPosSettingInfo(posSettingId: posSettingId);
+    dynamic result = await loadingSynchronizingDataService
+        .loadCurrentUserPosSettingInfo(posSettingId: posSettingId);
     if (result is PosSettingInfo) {
       await SharedPr.setCurrentPosObj(posObject: result);
       // change
@@ -632,7 +634,6 @@ class LoadingDataController extends GetxController {
 
   // [ STEP (4) - UPDATE HISTORY BASED ON ITEM TYPE ] =================================================================
   updateHistoryBasedOnItemType<T>({bool returnDiffData = false}) async {
-
     String typeNameX = getOdooModels<T>();
 
     var result = await getFilteredHistory(
@@ -648,8 +649,7 @@ class LoadingDataController extends GetxController {
         await updateItemHistoryRemotely(typeName: typeNameX);
         await checkIsRegisteredController<T>();
       }
-    } else {
-    }
+    } else {}
   }
 
   // =========================================================== [ SAVE IN LOCAL DB ] ==========================================================
@@ -674,7 +674,6 @@ class LoadingDataController extends GetxController {
     //       Get.isRegistered<ProductController>(tag: 'productControllerMain');
     //   if (productControllerRegistered) {
 
-
     //     ProductController productController = Get.find(tag: 'productControllerMain');
     //     productController.hasMore.value = true;
     //     productController.hasLess.value = false;
@@ -694,7 +693,7 @@ class LoadingDataController extends GetxController {
     //     productController.update();
     //   }
     // } else if (T == Customer) {
-      
+
     //   bool customerControllerRegistered =
     //       Get.isRegistered<CustomerController>(tag: 'customerControllerMain');
     //   if (customerControllerRegistered) {
@@ -716,7 +715,6 @@ class LoadingDataController extends GetxController {
     //   }
     // }
     //===
-  
   }
 
 // ========================================== [ GET PRODUCT HISTORY ] =============================================
@@ -734,7 +732,6 @@ class LoadingDataController extends GetxController {
   }
 
 // ========================================== [ GET PRODUCT HISTORY ] =============================================
-
 
   Future getSelectedLoadDataCount() async {
     int count = 0;
@@ -775,10 +772,7 @@ class LoadingDataController extends GetxController {
 
   Future<ResponseResult> updateAllLoadData() async {
     if (count == 0 || count == loaddata.length) {
-
-    } else {
-
-    }
+    } else {}
     return ResponseResult(
       status: true,
     );
@@ -868,6 +862,7 @@ class LoadingDataController extends GetxController {
           methodName: "refreshDataFromRemoteServer");
     }
   }
+
   Future updateAll({required String name}) async {
     try {
       itemUpdate = name;
@@ -875,7 +870,6 @@ class LoadingDataController extends GetxController {
       update(['loading']);
       var connectivityResult = await (Connectivity().checkConnectivity());
       if (!connectivityResult.contains(ConnectivityResult.none)) {
-
         // CHECK IF DEVICE IS TRUSTED
         bool isTrustedDevice = await MacAddressHelper.isTrustedDevice();
         if (!isTrustedDevice) {
