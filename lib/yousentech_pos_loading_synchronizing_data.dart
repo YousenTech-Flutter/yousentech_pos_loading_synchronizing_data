@@ -16,3 +16,4 @@ export 'src/loading_synchronizing_data/utils/fail_loading_dialog.dart';
 export 'src/loading_synchronizing_data/utils/main_history_item_processor.dart';
 export 'src/loading_synchronizing_data/utils/pos_category_processor.dart';
 export 'src/loading_synchronizing_data/utils/product_processor.dart';
+import 'package:yousentech_pos_loading_synchronizing_data/yousentech_pos_loading_synchronizing_data.dart';

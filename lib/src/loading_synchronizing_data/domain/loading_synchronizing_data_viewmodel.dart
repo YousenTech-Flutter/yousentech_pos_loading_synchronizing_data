@@ -52,7 +52,7 @@ class LoadingDataController extends GetxController {
       LoadingSynchronizingDataService();
   List<int> posCategoryIdsList = [];
   // change
-  // final ItemHistoryController _itemHistoryController = ItemHistoryController();
+  final ItemHistoryController _itemHistoryController = ItemHistoryController();
   //===
   @override
   Future<void> onInit() async {

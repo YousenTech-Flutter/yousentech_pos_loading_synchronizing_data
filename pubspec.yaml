@@ -31,6 +31,14 @@ dependencies:
     git:
       url: https://github.com/YousenTech-Flutter/yousentech_authentication.git
       ref: master
+  yousentech_pos_dashboard:
+    git:
+      url: https://github.com/YousenTech-Flutter/yousentech_pos_dashboard.git
+      ref: master
+  yousentech_pos_basic_data_management:
+    git:
+      url: https://github.com/YousenTech-Flutter/yousentech_pos_basic_data_management.git
+      ref: master
   crypto: ^3.0.3
   flutter_screenutil: ^5.9.3
 
