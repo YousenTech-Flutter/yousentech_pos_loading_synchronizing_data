@@ -22,6 +22,7 @@ import 'package:shared_widgets/shared_widgets/app_snack_bar.dart';
 import 'package:shared_widgets/shared_widgets/handle_exception_helper.dart';
 import 'package:shared_widgets/utils/mac_address_helper.dart';
 import 'package:shared_widgets/utils/response_result.dart';
+import 'package:yousentech_pos_basic_data_management/yousentech_pos_basic_data_management.dart';
 import 'package:yousentech_pos_loading_synchronizing_data/config/app_enums.dart';
 import 'package:yousentech_pos_loading_synchronizing_data/config/app_list.dart';
 import 'package:yousentech_pos_loading_synchronizing_data/src/loading_synchronizing_data/domain/loading_item_count_controller.dart';
@@ -51,9 +52,9 @@ class LoadingDataController extends GetxController {
   late LoadingSynchronizingDataService loadingSynchronizingDataService =
       LoadingSynchronizingDataService();
   List<int> posCategoryIdsList = [];
-  // change
+
   final ItemHistoryController _itemHistoryController = ItemHistoryController();
-  //===
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -498,9 +499,7 @@ class LoadingDataController extends GetxController {
 
     if (list != null && list.isNotEmpty) {
       await _instance!.createList(recordsList: list);
-      // change
-      // await _itemHistoryController.updateHistoryRecordOnFirstLogin<T>();
-      //===
+      await _itemHistoryController.updateHistoryRecordOnFirstLogin<T>();
       await checkIsRegisteredController<T>();
     } else {
       await updateHistoryBasedOnItemType<T>();
@@ -654,67 +653,64 @@ class LoadingDataController extends GetxController {
 
   // =========================================================== [ SAVE IN LOCAL DB ] ==========================================================
   Future checkIsRegisteredController<T>() async {
-    // change
-    // if (T == PosCategory) {
-    //   bool categoryControllerRegistered =
-    //       Get.isRegistered<PosCategoryController>(
-    //           tag: 'categoryControllerMain');
-    //   if (categoryControllerRegistered) {
-    //     _instance = GeneralLocalDB.getInstance<PosCategory>(
-    //         fromJsonFun: PosCategory.fromJson);
-    //     PosCategoryController posCategoryController =
-    //         Get.find(tag: 'categoryControllerMain');
-    //     posCategoryController.posCategoryList
-    //         .assignAll((await _instance!.index()) as List<PosCategory>);
+    if (T == PosCategory) {
+      bool categoryControllerRegistered =
+          Get.isRegistered<PosCategoryController>(
+              tag: 'categoryControllerMain');
+      if (categoryControllerRegistered) {
+        _instance = GeneralLocalDB.getInstance<PosCategory>(
+            fromJsonFun: PosCategory.fromJson);
+        PosCategoryController posCategoryController =
+            Get.find(tag: 'categoryControllerMain');
+        posCategoryController.posCategoryList
+            .assignAll((await _instance!.index()) as List<PosCategory>);
 
-    //     posCategoryController.update();
-    //   }
-    // } else if (T == Product) {
-    //   bool productControllerRegistered =
-    //       Get.isRegistered<ProductController>(tag: 'productControllerMain');
-    //   if (productControllerRegistered) {
+        posCategoryController.update();
+      }
+    } else if (T == Product) {
+      bool productControllerRegistered =
+          Get.isRegistered<ProductController>(tag: 'productControllerMain');
+      if (productControllerRegistered) {
+        ProductController productController =
+            Get.find(tag: 'productControllerMain');
+        productController.hasMore.value = true;
+        productController.hasLess.value = false;
+        // stop that
+        _instance = GeneralLocalDB.getInstance<PosCategory>(
+            fromJsonFun: PosCategory.fromJson);
+        productController.categoriesList
+            .assignAll((await _instance!.index()) as List<PosCategory>);
+        _instance =
+            GeneralLocalDB.getInstance<Product>(fromJsonFun: Product.fromJson);
+        productController.productList.assignAll((await _instance!.index(
+            offset: productController.page.value * productController.limit,
+            limit: productController.limit)) as List<Product>);
+        productController.pagingList.assignAll((await _instance!.index(
+            offset: productController.page.value * productController.limit,
+            limit: productController.limit)) as List<Product>);
+        productController.update();
+      }
+    } else if (T == Customer) {
+      bool customerControllerRegistered =
+          Get.isRegistered<CustomerController>(tag: 'customerControllerMain');
+      if (customerControllerRegistered) {
+        _instance = GeneralLocalDB.getInstance<Customer>(
+            fromJsonFun: Customer.fromJson);
+        CustomerController customerController =
+            Get.find(tag: 'customerControllerMain');
 
-    //     ProductController productController = Get.find(tag: 'productControllerMain');
-    //     productController.hasMore.value = true;
-    //     productController.hasLess.value = false;
-    //     // stop that
-    //     _instance = GeneralLocalDB.getInstance<PosCategory>(
-    //         fromJsonFun: PosCategory.fromJson);
-    //     productController.categoriesList
-    //         .assignAll((await _instance!.index()) as List<PosCategory>);
-    //     _instance =
-    //         GeneralLocalDB.getInstance<Product>(fromJsonFun: Product.fromJson);
-    //     productController.productList.assignAll((await _instance!.index(
-    //         offset: productController.page.value * productController.limit,
-    //         limit: productController.limit)) as List<Product>);
-    //     productController.pagingList.assignAll((await _instance!.index(
-    //         offset: productController.page.value * productController.limit,
-    //         limit: productController.limit)) as List<Product>);
-    //     productController.update();
-    //   }
-    // } else if (T == Customer) {
+        customerController.hasMore.value = true;
+        customerController.customerList.assignAll((await _instance!.index(
+            offset: customerController.page.value * customerController.limit,
+            limit: customerController.limit)) as List<Customer>);
 
-    //   bool customerControllerRegistered =
-    //       Get.isRegistered<CustomerController>(tag: 'customerControllerMain');
-    //   if (customerControllerRegistered) {
-    //     _instance = GeneralLocalDB.getInstance<Customer>(
-    //         fromJsonFun: Customer.fromJson);
-    //     CustomerController customerController =
-    //         Get.find(tag: 'customerControllerMain');
+        customerController.customerpagingList.assignAll((await _instance!.index(
+            offset: customerController.page.value * customerController.limit,
+            limit: customerController.limit)) as List<Customer>);
 
-    //     customerController.hasMore.value = true;
-    //     customerController.customerList.assignAll((await _instance!.index(
-    //         offset: customerController.page.value * customerController.limit,
-    //         limit: customerController.limit)) as List<Customer>);
-
-    //     customerController.customerpagingList.assignAll((await _instance!.index(
-    //         offset: customerController.page.value * customerController.limit,
-    //         limit: customerController.limit)) as List<Customer>);
-
-    //     customerController.update();
-    //   }
-    // }
-    //===
+        customerController.update();
+      }
+    }
   }
 
 // ========================================== [ GET PRODUCT HISTORY ] =============================================
