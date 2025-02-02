@@ -22,6 +22,7 @@ import 'package:shared_widgets/shared_widgets/app_snack_bar.dart';
 import 'package:shared_widgets/shared_widgets/handle_exception_helper.dart';
 import 'package:shared_widgets/utils/mac_address_helper.dart';
 import 'package:shared_widgets/utils/response_result.dart';
+import 'package:yousentech_pos_basic_data_management/yousentech_pos_basic_data_management.dart';
 import 'package:yousentech_pos_loading_synchronizing_data/config/app_enums.dart';
 import 'package:yousentech_pos_loading_synchronizing_data/config/app_list.dart';
 import 'package:yousentech_pos_loading_synchronizing_data/src/loading_synchronizing_data/domain/loading_item_count_controller.dart';
@@ -48,11 +49,12 @@ class LoadingDataController extends GetxController {
   GeneralLocalDB? _instance;
 
   int count = 0;
-  late LoadingSynchronizingDataService loadingSynchronizingDataService = LoadingSynchronizingDataService();
+  late LoadingSynchronizingDataService loadingSynchronizingDataService =
+      LoadingSynchronizingDataService();
   List<int> posCategoryIdsList = [];
-  // change
-  // final ItemHistoryController _itemHistoryController = ItemHistoryController();
-  //===
+
+  final ItemHistoryController _itemHistoryController = ItemHistoryController();
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -86,7 +88,8 @@ class LoadingDataController extends GetxController {
   // =================================================== [ LOADING CURRENT POS SETTING ] ==========================================================
   Future<dynamic> loadingCurrentPosSetting({required int posSettingId}) async {
     isLoad.value = true;
-    dynamic result = await loadingSynchronizingDataService.loadCurrentUserPosSettingInfo(posSettingId: posSettingId);
+    dynamic result = await loadingSynchronizingDataService
+        .loadCurrentUserPosSettingInfo(posSettingId: posSettingId);
     if (result is PosSettingInfo) {
       await SharedPr.setCurrentPosObj(posObject: result);
       // change
@@ -496,9 +499,7 @@ class LoadingDataController extends GetxController {
 
     if (list != null && list.isNotEmpty) {
       await _instance!.createList(recordsList: list);
-      // change
-      // await _itemHistoryController.updateHistoryRecordOnFirstLogin<T>();
-      //===
+      await _itemHistoryController.updateHistoryRecordOnFirstLogin<T>();
       await checkIsRegisteredController<T>();
     } else {
       await updateHistoryBasedOnItemType<T>();
@@ -632,7 +633,6 @@ class LoadingDataController extends GetxController {
 
   // [ STEP (4) - UPDATE HISTORY BASED ON ITEM TYPE ] =================================================================
   updateHistoryBasedOnItemType<T>({bool returnDiffData = false}) async {
-
     String typeNameX = getOdooModels<T>();
 
     var result = await getFilteredHistory(
@@ -648,75 +648,69 @@ class LoadingDataController extends GetxController {
         await updateItemHistoryRemotely(typeName: typeNameX);
         await checkIsRegisteredController<T>();
       }
-    } else {
-    }
+    } else {}
   }
 
   // =========================================================== [ SAVE IN LOCAL DB ] ==========================================================
   Future checkIsRegisteredController<T>() async {
-    // change
-    // if (T == PosCategory) {
-    //   bool categoryControllerRegistered =
-    //       Get.isRegistered<PosCategoryController>(
-    //           tag: 'categoryControllerMain');
-    //   if (categoryControllerRegistered) {
-    //     _instance = GeneralLocalDB.getInstance<PosCategory>(
-    //         fromJsonFun: PosCategory.fromJson);
-    //     PosCategoryController posCategoryController =
-    //         Get.find(tag: 'categoryControllerMain');
-    //     posCategoryController.posCategoryList
-    //         .assignAll((await _instance!.index()) as List<PosCategory>);
+    if (T == PosCategory) {
+      bool categoryControllerRegistered =
+          Get.isRegistered<PosCategoryController>(
+              tag: 'categoryControllerMain');
+      if (categoryControllerRegistered) {
+        _instance = GeneralLocalDB.getInstance<PosCategory>(
+            fromJsonFun: PosCategory.fromJson);
+        PosCategoryController posCategoryController =
+            Get.find(tag: 'categoryControllerMain');
+        posCategoryController.posCategoryList
+            .assignAll((await _instance!.index()) as List<PosCategory>);
 
-    //     posCategoryController.update();
-    //   }
-    // } else if (T == Product) {
-    //   bool productControllerRegistered =
-    //       Get.isRegistered<ProductController>(tag: 'productControllerMain');
-    //   if (productControllerRegistered) {
+        posCategoryController.update();
+      }
+    } else if (T == Product) {
+      bool productControllerRegistered =
+          Get.isRegistered<ProductController>(tag: 'productControllerMain');
+      if (productControllerRegistered) {
+        ProductController productController =
+            Get.find(tag: 'productControllerMain');
+        productController.hasMore.value = true;
+        productController.hasLess.value = false;
+        // stop that
+        _instance = GeneralLocalDB.getInstance<PosCategory>(
+            fromJsonFun: PosCategory.fromJson);
+        productController.categoriesList
+            .assignAll((await _instance!.index()) as List<PosCategory>);
+        _instance =
+            GeneralLocalDB.getInstance<Product>(fromJsonFun: Product.fromJson);
+        productController.productList.assignAll((await _instance!.index(
+            offset: productController.page.value * productController.limit,
+            limit: productController.limit)) as List<Product>);
+        productController.pagingList.assignAll((await _instance!.index(
+            offset: productController.page.value * productController.limit,
+            limit: productController.limit)) as List<Product>);
+        productController.update();
+      }
+    } else if (T == Customer) {
+      bool customerControllerRegistered =
+          Get.isRegistered<CustomerController>(tag: 'customerControllerMain');
+      if (customerControllerRegistered) {
+        _instance = GeneralLocalDB.getInstance<Customer>(
+            fromJsonFun: Customer.fromJson);
+        CustomerController customerController =
+            Get.find(tag: 'customerControllerMain');
 
+        customerController.hasMore.value = true;
+        customerController.customerList.assignAll((await _instance!.index(
+            offset: customerController.page.value * customerController.limit,
+            limit: customerController.limit)) as List<Customer>);
 
-    //     ProductController productController = Get.find(tag: 'productControllerMain');
-    //     productController.hasMore.value = true;
-    //     productController.hasLess.value = false;
-    //     // stop that
-    //     _instance = GeneralLocalDB.getInstance<PosCategory>(
-    //         fromJsonFun: PosCategory.fromJson);
-    //     productController.categoriesList
-    //         .assignAll((await _instance!.index()) as List<PosCategory>);
-    //     _instance =
-    //         GeneralLocalDB.getInstance<Product>(fromJsonFun: Product.fromJson);
-    //     productController.productList.assignAll((await _instance!.index(
-    //         offset: productController.page.value * productController.limit,
-    //         limit: productController.limit)) as List<Product>);
-    //     productController.pagingList.assignAll((await _instance!.index(
-    //         offset: productController.page.value * productController.limit,
-    //         limit: productController.limit)) as List<Product>);
-    //     productController.update();
-    //   }
-    // } else if (T == Customer) {
-      
-    //   bool customerControllerRegistered =
-    //       Get.isRegistered<CustomerController>(tag: 'customerControllerMain');
-    //   if (customerControllerRegistered) {
-    //     _instance = GeneralLocalDB.getInstance<Customer>(
-    //         fromJsonFun: Customer.fromJson);
-    //     CustomerController customerController =
-    //         Get.find(tag: 'customerControllerMain');
+        customerController.customerpagingList.assignAll((await _instance!.index(
+            offset: customerController.page.value * customerController.limit,
+            limit: customerController.limit)) as List<Customer>);
 
-    //     customerController.hasMore.value = true;
-    //     customerController.customerList.assignAll((await _instance!.index(
-    //         offset: customerController.page.value * customerController.limit,
-    //         limit: customerController.limit)) as List<Customer>);
-
-    //     customerController.customerpagingList.assignAll((await _instance!.index(
-    //         offset: customerController.page.value * customerController.limit,
-    //         limit: customerController.limit)) as List<Customer>);
-
-    //     customerController.update();
-    //   }
-    // }
-    //===
-  
+        customerController.update();
+      }
+    }
   }
 
 // ========================================== [ GET PRODUCT HISTORY ] =============================================
@@ -734,7 +728,6 @@ class LoadingDataController extends GetxController {
   }
 
 // ========================================== [ GET PRODUCT HISTORY ] =============================================
-
 
   Future getSelectedLoadDataCount() async {
     int count = 0;
@@ -775,10 +768,7 @@ class LoadingDataController extends GetxController {
 
   Future<ResponseResult> updateAllLoadData() async {
     if (count == 0 || count == loaddata.length) {
-
-    } else {
-
-    }
+    } else {}
     return ResponseResult(
       status: true,
     );
@@ -868,6 +858,7 @@ class LoadingDataController extends GetxController {
           methodName: "refreshDataFromRemoteServer");
     }
   }
+
   Future updateAll({required String name}) async {
     try {
       itemUpdate = name;
@@ -875,7 +866,6 @@ class LoadingDataController extends GetxController {
       update(['loading']);
       var connectivityResult = await (Connectivity().checkConnectivity());
       if (!connectivityResult.contains(ConnectivityResult.none)) {
-
         // CHECK IF DEVICE IS TRUSTED
         bool isTrustedDevice = await MacAddressHelper.isTrustedDevice();
         if (!isTrustedDevice) {
