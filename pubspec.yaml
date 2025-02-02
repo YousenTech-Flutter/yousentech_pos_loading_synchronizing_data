@@ -41,7 +41,7 @@ dependencies:
       ref: master
   crypto: ^3.0.3
   flutter_screenutil: ^5.9.3
-
+  connectivity_plus: ^6.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

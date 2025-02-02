@@ -125,7 +125,6 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
     }
   }
 
-  @override
   Future<dynamic> loadCurrentCompany({required int companyId}) async {
     try {
       var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
