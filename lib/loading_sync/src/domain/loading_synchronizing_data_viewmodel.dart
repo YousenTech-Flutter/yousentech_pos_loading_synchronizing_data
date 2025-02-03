@@ -13,6 +13,7 @@ import 'package:pos_shared_preferences/models/customer_model.dart';
 import 'package:pos_shared_preferences/models/pos_categories_data/pos_category.dart';
 import 'package:pos_shared_preferences/models/pos_session/posSession.dart';
 import 'package:pos_shared_preferences/models/pos_setting_info_model.dart';
+import 'package:pos_shared_preferences/models/printing_prefrences.dart';
 import 'package:pos_shared_preferences/models/product_data/product.dart';
 import 'package:pos_shared_preferences/models/product_unit/data/product_unit.dart';
 import 'package:pos_shared_preferences/pos_shared_preferences.dart';
@@ -25,6 +26,7 @@ import 'package:yousentech_pos_basic_data_management/basic_data_management/src/c
 import 'package:yousentech_pos_basic_data_management/basic_data_management/src/item_history/domain/item_history_viewmodel.dart';
 import 'package:yousentech_pos_basic_data_management/basic_data_management/src/pos_categories/domain/pos_category_viewmodel.dart';
 import 'package:yousentech_pos_basic_data_management/basic_data_management/src/products/domain/product_viewmodel.dart';
+import 'package:yousentech_pos_invoice_printing/print_invoice/config/app_enums.dart';
 import 'package:yousentech_pos_loading_synchronizing_data/loading_sync/config/app_enums.dart';
 import 'package:yousentech_pos_loading_synchronizing_data/loading_sync/config/app_list.dart';
 import 'package:yousentech_pos_loading_synchronizing_data/loading_sync/src/domain/loading_item_count_controller.dart';
@@ -94,27 +96,25 @@ class LoadingDataController extends GetxController {
         .loadCurrentUserPosSettingInfo(posSettingId: posSettingId);
     if (result is PosSettingInfo) {
       await SharedPr.setCurrentPosObj(posObject: result);
-      // change
-      // await SharedPr.setPrintingPreferenceObj(
-      //     printingPreferenceObj: PrintingPreference(
-      //   showPreview: result.showPreview,
-      //   isSilentPrinting:
-      //       result.printingMode == PrintingType.is_silent_printing.name
-      //           ? true
-      //           : false,
-      //   isShowPrinterDialog:
-      //       result.printingMode == PrintingType.is_show_printer_dialog.name
-      //           ? true
-      //           : false,
-      //   isDownloadPDF: result.isDownloadPDF,
-      //   downloadPath: result.downloadPath,
-      //   showPosPaymentSummary: result.showPosPaymentSummary,
-      //   disablePrinting:
-      //       result.printingMode == PrintingType.disable_printing.name
-      //           ? true
-      //           : false,
-      // ));
-      //===
+      await SharedPr.setPrintingPreferenceObj(
+          printingPreferenceObj: PrintingPreference(
+        showPreview: result.showPreview,
+        isSilentPrinting:
+            result.printingMode == PrintingType.is_silent_printing.name
+                ? true
+                : false,
+        isShowPrinterDialog:
+            result.printingMode == PrintingType.is_show_printer_dialog.name
+                ? true
+                : false,
+        isDownloadPDF: result.isDownloadPDF,
+        downloadPath: result.downloadPath,
+        showPosPaymentSummary: result.showPosPaymentSummary,
+        disablePrinting:
+            result.printingMode == PrintingType.disable_printing.name
+                ? true
+                : false,
+      ));
       var company = await loadingSynchronizingDataService.loadCurrentCompany(
           companyId: SharedPr.currentPosObject!.companyId!);
       if (company != null && company is Customer) {
