@@ -16,7 +16,7 @@ import 'package:pos_shared_preferences/pos_shared_preferences.dart';
 import 'package:shared_widgets/config/app_odoo_models.dart';
 import 'package:shared_widgets/shared_widgets/handle_exception_helper.dart';
 import 'package:shared_widgets/shared_widgets/odoo_connection_helper.dart';
-import 'package:yousentech_pos_loading_synchronizing_data/utils/define_type_function.dart';
+import 'package:yousentech_pos_loading_synchronizing_data/loading_sync/utils/define_type_function.dart';
 import 'package:yousentech_pos_local_db/yousentech_pos_local_db.dart';
 import 'loading_synchronizing_data_repository.dart';
 

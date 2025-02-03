@@ -1,9 +1,6 @@
-// /// A Calculator.
-// class Calculator {
-//   /// Returns [value] plus 1.
-//   int addOne(int value) => value + 1;
-// }
+// ignore_for_file: unnecessary_library_name
 
 library yousentech_pos_loading_synchronizing_data;
 
-export 'lib_module.dart';
+// export 'lib_module.dart';
+export 'loading_sync/src/presentation/views/data_loading_screen.dart';

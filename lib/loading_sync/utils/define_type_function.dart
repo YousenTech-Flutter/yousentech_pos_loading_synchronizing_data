@@ -6,7 +6,7 @@ import 'package:pos_shared_preferences/models/pos_categories_data/pos_category.d
 import 'package:pos_shared_preferences/models/product_data/product.dart';
 import 'package:pos_shared_preferences/models/product_unit/data/product_unit.dart';
 import 'package:shared_widgets/config/app_odoo_models.dart';
-import 'package:yousentech_pos_loading_synchronizing_data/config/app_enums.dart';
+import 'package:yousentech_pos_loading_synchronizing_data/loading_sync/config/app_enums.dart';
 import 'package:yousentech_pos_local_db/yousentech_pos_local_db.dart';
 
 getLocalInstanceType<T>({T? type}) {

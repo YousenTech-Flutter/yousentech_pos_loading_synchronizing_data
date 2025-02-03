@@ -1,4 +1,4 @@
-import 'package:yousentech_pos_loading_synchronizing_data/config/app_enums.dart';
+import 'package:yousentech_pos_loading_synchronizing_data/loading_sync/config/app_enums.dart';
 
 var loaddata = {
   Loaddata.products: [
