@@ -401,11 +401,36 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
   }
 
   @override
-  Future getFilteredHistory(
+  // Future getFilteredHistory(
+  //     {required List<int> excludeIds,
+  //     required String typeName,
+  //     required int currentPosId}) async {
+  //   try {
+  //     var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
+  //       'model': OdooModels.itemsHistory,
+  //       'method': 'get_filtered_history',
+  //       'args': [excludeIds, typeName, SharedPr.currentPosObject!.id],
+  //       'domain': [],
+  //       'kwargs': {},
+  //     });
+  //     return result.isEmpty || result == null
+  //         ? <BasicItemHistory>[]
+  //         : (result as List).map((e) => BasicItemHistory.fromJson(e)).toList();
+  //   } catch (e) {
+  //     // print("catch $e");
+  //     return handleException(
+  //         exception: e, navigation: false, methodName: "getFilteredHistory");
+  //   }
+  // }
+    Future getFilteredHistory(
       {required List<int> excludeIds,
       required String typeName,
-      required int currentPosId}) async {
+      required int currentPosId, List<int>? productIds}) async {
     try {
+      List paramsList = [excludeIds, typeName, SharedPr.currentPosObject!.id];
+      if(productIds != null) {
+        paramsList.add(productIds);
+      }
       var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
         'model': OdooModels.itemsHistory,
         'method': 'get_filtered_history',
@@ -417,7 +442,6 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
           ? <BasicItemHistory>[]
           : (result as List).map((e) => BasicItemHistory.fromJson(e)).toList();
     } catch (e) {
-      // print("catch $e");
       return handleException(
           exception: e, navigation: false, methodName: "getFilteredHistory");
     }
