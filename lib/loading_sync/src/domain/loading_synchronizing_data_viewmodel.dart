@@ -13,7 +13,7 @@ import 'package:pos_shared_preferences/models/customer_model.dart';
 import 'package:pos_shared_preferences/models/pos_categories_data/pos_category.dart';
 import 'package:pos_shared_preferences/models/pos_session/posSession.dart';
 import 'package:pos_shared_preferences/models/pos_setting_info_model.dart';
-import 'package:pos_shared_preferences/models/printing_prefrences.dart';
+import 'package:pos_shared_preferences/models/printing/data/printing_prefrences.dart';
 import 'package:pos_shared_preferences/models/product_data/product.dart';
 import 'package:pos_shared_preferences/models/product_unit/data/product_unit.dart';
 import 'package:pos_shared_preferences/pos_shared_preferences.dart';
