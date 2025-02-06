@@ -405,30 +405,36 @@ class LoadingDataController extends GetxController {
     }
   }
 
+
   Future synchronizeDB<T>({bool show = true}) async {
     try {
+      print("===============synchronizeDB=========== $T ");
       var connectivityResult = await (Connectivity().checkConnectivity());
+      print("===============connectivityResult=========== $connectivityResult ");
       if (!connectivityResult.contains(ConnectivityResult.none)) {
         // CHECK IF DEVICE IS TRUSTED
         bool isTrustedDevice = await MacAddressHelper.isTrustedDevice();
+        print("===============isTrustedDevice=========== $isTrustedDevice");
         if (!isTrustedDevice) {
           return null;
         }
         // CHECK CHECKSUM OF TWO LOCAL DB
         bool? isIdenticalChecksum =
             await compareDataChecksum<T>(posCategoriesIds: posCategoryIdsList);
+        print("===============isIdenticalChecksum=========== $isIdenticalChecksum");
         if (isIdenticalChecksum != null && isIdenticalChecksum) {
           return true;
         } else if (isIdenticalChecksum != null && !isIdenticalChecksum) {
           if (show) {
             var name = getNamesOfSync<T>();
-
+            print("===============getNamesOfSync=========== $name");
             appSnackBar(
                 message:
                     'synchronize_now_by_name'.trParams({"field_name": name.tr}),
                 messageType: MessageTypes.success,
                 isDismissible: false);
           }
+          print("===============updateHistoryBasedOnItemType===========");
           await updateHistoryBasedOnItemType<T>();
           return false;
         }
