@@ -405,12 +405,12 @@ class LoadingDataController extends GetxController {
     }
   }
 
-
   Future synchronizeDB<T>({bool show = true}) async {
     try {
       print("===============synchronizeDB=========== $T ");
       var connectivityResult = await (Connectivity().checkConnectivity());
-      print("===============connectivityResult=========== $connectivityResult ");
+      print(
+          "===============connectivityResult=========== $connectivityResult ");
       if (!connectivityResult.contains(ConnectivityResult.none)) {
         // CHECK IF DEVICE IS TRUSTED
         bool isTrustedDevice = await MacAddressHelper.isTrustedDevice();
@@ -421,7 +421,8 @@ class LoadingDataController extends GetxController {
         // CHECK CHECKSUM OF TWO LOCAL DB
         bool? isIdenticalChecksum =
             await compareDataChecksum<T>(posCategoriesIds: posCategoryIdsList);
-        print("===============isIdenticalChecksum=========== $isIdenticalChecksum");
+        print(
+            "===============isIdenticalChecksum=========== $isIdenticalChecksum");
         if (isIdenticalChecksum != null && isIdenticalChecksum) {
           return true;
         } else if (isIdenticalChecksum != null && !isIdenticalChecksum) {
@@ -641,22 +642,47 @@ class LoadingDataController extends GetxController {
 
   // [ STEP (4) - UPDATE HISTORY BASED ON ITEM TYPE ] =================================================================
   updateHistoryBasedOnItemType<T>({bool returnDiffData = false}) async {
+    print(
+        "===========================updateHistoryBasedOnItemType============================");
     String typeNameX = getOdooModels<T>();
+    print(
+        "===========================getOdooModels============================");
 
     var result = await getFilteredHistory(
         excludeIds: <int>[SharedPr.currentPosObject!.id!], typeName: typeNameX);
+    print(
+        "===========================getFilteredHistory============================");
+
     if (result.status) {
+      print(
+          "===========================getFilteredHistory = true ============================");
+
       var data = await divideItemsBasedOnStatus<T>(
           itemsHistoryList: result, returnDiffData: returnDiffData);
+      print(
+          "===========================divideItemsBasedOnStatus ============================");
+
       if (returnDiffData) {
+        print(
+            "=========================== returnDiffDa ============================");
+
         return data;
       }
 
       if (!returnDiffData) {
+        print(
+            "=========================== !returnDiffData ============================");
         await updateItemHistoryRemotely(typeName: typeNameX);
+        print(
+            "=========================== updateItemHistoryRemotely ============================");
         await checkIsRegisteredController<T>();
+        print(
+            "=========================== checkIsRegisteredController ============================");
       }
-    } else {}
+    } else {
+      print(
+          "===========================getFilteredHistory = false ============================");
+    }
   }
 
   // =========================================================== [ SAVE IN LOCAL DB ] ==========================================================
