@@ -58,6 +58,7 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
   @override
   Future<dynamic> loadCustomerInfo() async {
     try {
+      print("===============loadCustomerInfo=========== ${OdooProjectOwnerConnectionHelper.odooClient}");
       var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
         'model': OdooModels.customer,
         'method': 'search_read',
