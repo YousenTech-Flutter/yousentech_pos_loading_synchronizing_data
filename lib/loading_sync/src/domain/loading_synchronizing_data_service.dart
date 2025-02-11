@@ -100,6 +100,9 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
               .map((e) => Customer.fromJson(e, fromLocal: false))
               .toList();
     } catch (e) {
+      if (kDebugMode) {
+          print("===================Customer catch### ==============$e");
+        }
       return handleException(
           exception: e, navigation: false, methodName: "loadCustomerInfo");
     }
