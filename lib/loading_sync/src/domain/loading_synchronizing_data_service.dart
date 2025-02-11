@@ -62,7 +62,7 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
       print("===============loadCustomerInfo=========== ${OdooProjectOwnerConnectionHelper.odooClient}");
       var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
         'model': OdooModels.customer,
-        'method': 'search_read',
+        'method': 'get_customers',
         'args': [],
         'kwargs': {
           'context': {},
