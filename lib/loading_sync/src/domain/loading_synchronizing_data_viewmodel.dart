@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:pos_shared_preferences/helper/app_enum.dart';
 import 'package:pos_shared_preferences/models/account_journal/data/account_journal.dart';
@@ -287,7 +288,14 @@ class LoadingDataController extends GetxController {
 
   // [ LOADING PRODUCTS ] ===============================================================
   Future<void> loadingProduct({required List<int> posCategoriesIds}) async {
+    if (kDebugMode) {
+      print(
+          "===================loadingProduct============== $posCategoriesIds");
+    }
     int? count = await checkCount<Product>();
+    if (kDebugMode) {
+      print("===================checkCount============== $count");
+    }
     List<Product> list = [];
     try {
       if (count != null && count == 0) {
@@ -297,11 +305,21 @@ class LoadingDataController extends GetxController {
 
         final LoadingItemsCountController loadingItemsCountController =
             Get.put(LoadingItemsCountController());
+        if (kDebugMode) {
+          print("===================LoadingItemsCountController==============");
+        }
         loadingItemsCountController.resetLoadingItemCount();
+        if (kDebugMode) {
+          print("===================resetLoadingItemCount==============");
+        }
         lengthRemote.value = 0;
         list = await loadingSynchronizingDataService
             .loadProductDataBasedOnPosCategory(
                 posCategoriesIds: posCategoriesIds);
+        if (kDebugMode) {
+          print(
+              "===================loadProductDataBasedOnPosCategory==============$list");
+        }
         Set<Product> productSet = Set.from(list);
         list = productSet.toList();
         isLoadData.value = false;
@@ -312,8 +330,14 @@ class LoadingDataController extends GetxController {
         loadTital.value = 'Completed';
         isLoad.value = false;
       }
+      if (kDebugMode) {
+        print("===================Completed==============");
+      }
       await saveInLocalDB<Product>(list: list);
     } catch (e) {
+      if (kDebugMode) {
+        print("===================catch Loading Product==============$e");
+      }
       isLoad.value = false;
       isLoadData.value = false;
     }
@@ -354,19 +378,31 @@ class LoadingDataController extends GetxController {
 
   // [ LOADING CUSTOMERS ] ===============================================================
   Future<void> loadingCustomer() async {
+    if (kDebugMode) {
+          print("===================loadingCustomer==============");
+        }
     int? count = await checkCount<Customer>();
+    if (kDebugMode) {
+          print("===================Customer count============== $count");
+        }
     List<Customer> list = [];
     try {
       if (count != null && count == 0) {
         isLoad.value = true;
         loadTital.value = "Customer Loading";
         isLoadData.value = true;
-
+       
         final LoadingItemsCountController loadingItemsCountController =
             Get.put(LoadingItemsCountController());
+        if (kDebugMode) {
+          print("===================Customer LoadingItemsCountController==============");
+        }
         loadingItemsCountController.resetLoadingItemCount();
         lengthRemote.value = 0;
         list = await loadingSynchronizingDataService.loadCustomerInfo();
+        if (kDebugMode) {
+          print("===================loadCustomerInfo==============$list");
+        }
         isLoadData.value = false;
         if (list is List) {
           loadTital.value = "Create Customer";
@@ -378,6 +414,9 @@ class LoadingDataController extends GetxController {
       }
       await saveInLocalDB<Customer>(list: list);
     } catch (e) {
+      if (kDebugMode) {
+          print("===================catch Customer==============$e");
+        }
       isLoad.value = false;
       isLoadData.value = false;
     }
@@ -504,8 +543,13 @@ class LoadingDataController extends GetxController {
   }
 
   saveInLocalDB<T>({List<T>? list}) async {
+    if (kDebugMode) {
+      print("===================saveInLocalDB==============");
+    }
     _instance = getLocalInstanceType<T>();
-
+    if (kDebugMode) {
+          print("===================getLocalInstanceType==============$_instance");
+        }
     if (list != null && list.isNotEmpty) {
       await _instance!.createList(recordsList: list);
       await _itemHistoryController.updateHistoryRecordOnFirstLogin<T>();
