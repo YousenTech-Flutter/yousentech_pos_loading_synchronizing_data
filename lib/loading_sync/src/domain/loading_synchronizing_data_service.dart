@@ -1,6 +1,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:pos_shared_preferences/models/account_journal/data/account_journal.dart';
 import 'package:pos_shared_preferences/models/account_tax/data/account_tax.dart';
@@ -90,6 +91,9 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
           'order': 'id'
         },
       });
+      if (kDebugMode) {
+          print("===================CustomerInfo==============${result[0]}");
+        }
       return result.isEmpty
           ? <Customer>[]
           : (result as List)
