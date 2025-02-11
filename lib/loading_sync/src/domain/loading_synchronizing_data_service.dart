@@ -71,24 +71,24 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
             ['active', '=', true],
           ],
           'fields': [
-            'name',
-            'email',
-            'phone',
-            'customer_rank',
-            'image_1920',
-            'vat',
-            'street',
-            'city',
-            'country_id',
-            'Postal_code',
-            'District',
-            'additional_no',
-            'building_no',
-            'other_seller_id',
-            'company_id',
-            'is_company'
+            // 'name',
+            // 'email',
+            // 'phone',
+            // 'customer_rank',
+            // 'image_1920',
+            // 'vat',
+            // 'street',
+            // 'city',
+            // 'country_id',
+            // 'Postal_code',
+            // 'District',
+            // 'additional_no',
+            // 'building_no',
+            // 'other_seller_id',
+            // 'company_id',
+            // 'is_company'
           ],
-          'order': 'id'
+          // 'order': 'id'
         },
       });
       if (kDebugMode) {
