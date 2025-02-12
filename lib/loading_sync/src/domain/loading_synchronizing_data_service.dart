@@ -67,8 +67,8 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
         'kwargs': {
           'context': {},
           'domain': [
-            ['customer_rank', '>', 0],
-            ['active', '=', true],
+            // ['customer_rank', '>', 0],
+            // ['active', '=', true],
           ],
           'fields': [
             // 'name',
