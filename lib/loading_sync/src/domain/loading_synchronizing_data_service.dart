@@ -65,30 +65,30 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
         'method': 'get_customers',
         'args': [],
         'kwargs': {
-          'context': {},
-          'domain': [
-            // ['customer_rank', '>', 0],
-            // ['active', '=', true],
-          ],
-          'fields': [
-            // 'name',
-            // 'email',
-            // 'phone',
-            // 'customer_rank',
-            // 'image_1920',
-            // 'vat',
-            // 'street',
-            // 'city',
-            // 'country_id',
-            // 'Postal_code',
-            // 'District',
-            // 'additional_no',
-            // 'building_no',
-            // 'other_seller_id',
-            // 'company_id',
-            // 'is_company'
-          ],
-          'order': 'id'
+          // 'context': {},
+          // 'domain': [
+          //   ['customer_rank', '>', 0],
+          //   ['active', '=', true],
+          // ],
+          // 'fields': [
+          //   'name',
+          //   'email',
+          //   'phone',
+          //   'customer_rank',
+          //   'image_1920',
+          //   'vat',
+          //   'street',
+          //   'city',
+          //   'country_id',
+          //   'Postal_code',
+          //   'District',
+          //   'additional_no',
+          //   'building_no',
+          //   'other_seller_id',
+          //   'company_id',
+          //   'is_company'
+          // ],
+          // 'order': 'id'
         },
       });
       if (kDebugMode) {
