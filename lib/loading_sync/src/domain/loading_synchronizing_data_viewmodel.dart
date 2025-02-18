@@ -288,14 +288,7 @@ class LoadingDataController extends GetxController {
 
   // [ LOADING PRODUCTS ] ===============================================================
   Future<void> loadingProduct({required List<int> posCategoriesIds}) async {
-    if (kDebugMode) {
-      print(
-          "===================loadingProduct============== $posCategoriesIds");
-    }
     int? count = await checkCount<Product>();
-    if (kDebugMode) {
-      print("===================checkCount============== $count");
-    }
     List<Product> list = [];
     try {
       if (count != null && count == 0) {
@@ -305,21 +298,12 @@ class LoadingDataController extends GetxController {
 
         final LoadingItemsCountController loadingItemsCountController =
             Get.put(LoadingItemsCountController());
-        if (kDebugMode) {
-          print("===================LoadingItemsCountController==============");
-        }
+
         loadingItemsCountController.resetLoadingItemCount();
-        if (kDebugMode) {
-          print("===================resetLoadingItemCount==============");
-        }
         lengthRemote.value = 0;
         list = await loadingSynchronizingDataService
             .loadProductDataBasedOnPosCategory(
                 posCategoriesIds: posCategoriesIds);
-        if (kDebugMode) {
-          print(
-              "===================loadProductDataBasedOnPosCategory==============$list");
-        }
         Set<Product> productSet = Set.from(list);
         list = productSet.toList();
         isLoadData.value = false;
@@ -330,14 +314,8 @@ class LoadingDataController extends GetxController {
         loadTital.value = 'Completed';
         isLoad.value = false;
       }
-      if (kDebugMode) {
-        print("===================Completed==============");
-      }
       await saveInLocalDB<Product>(list: list);
     } catch (e) {
-      if (kDebugMode) {
-        print("===================catch Loading Product==============$e");
-      }
       isLoad.value = false;
       isLoadData.value = false;
     }
@@ -378,13 +356,7 @@ class LoadingDataController extends GetxController {
 
   // [ LOADING CUSTOMERS ] ===============================================================
   Future<void> loadingCustomer() async {
-    if (kDebugMode) {
-          print("===================loadingCustomer==============");
-        }
     int? count = await checkCount<Customer>();
-    if (kDebugMode) {
-          print("===================Customer count============== $count");
-        }
     List<Customer> list = [];
     try {
       if (count != null && count == 0) {
@@ -394,15 +366,9 @@ class LoadingDataController extends GetxController {
        
         final LoadingItemsCountController loadingItemsCountController =
             Get.put(LoadingItemsCountController());
-        if (kDebugMode) {
-          print("===================Customer LoadingItemsCountController==============");
-        }
         loadingItemsCountController.resetLoadingItemCount();
         lengthRemote.value = 0;
         list = await loadingSynchronizingDataService.loadCustomerInfo();
-        if (kDebugMode) {
-          print("===================loadCustomerInfo==============$list");
-        }
         isLoadData.value = false;
         if (list is List) {
           loadTital.value = "Create Customer";
@@ -414,9 +380,6 @@ class LoadingDataController extends GetxController {
       }
       await saveInLocalDB<Customer>(list: list);
     } catch (e) {
-      if (kDebugMode) {
-          print("===================catch Customer==============$e");
-        }
       isLoad.value = false;
       isLoadData.value = false;
     }
@@ -446,35 +409,27 @@ class LoadingDataController extends GetxController {
 
   Future synchronizeDB<T>({bool show = true}) async {
     try {
-      print("===============synchronizeDB=========== $T ");
       var connectivityResult = await (Connectivity().checkConnectivity());
-      print(
-          "===============connectivityResult=========== $connectivityResult ");
       if (!connectivityResult.contains(ConnectivityResult.none)) {
         // CHECK IF DEVICE IS TRUSTED
         bool isTrustedDevice = await MacAddressHelper.isTrustedDevice();
-        print("===============isTrustedDevice=========== $isTrustedDevice");
         if (!isTrustedDevice) {
           return null;
         }
         // CHECK CHECKSUM OF TWO LOCAL DB
         bool? isIdenticalChecksum =
             await compareDataChecksum<T>(posCategoriesIds: posCategoryIdsList);
-        print(
-            "===============isIdenticalChecksum=========== $isIdenticalChecksum");
         if (isIdenticalChecksum != null && isIdenticalChecksum) {
           return true;
         } else if (isIdenticalChecksum != null && !isIdenticalChecksum) {
           if (show) {
             var name = getNamesOfSync<T>();
-            print("===============getNamesOfSync=========== $name");
             appSnackBar(
                 message:
                     'synchronize_now_by_name'.trParams({"field_name": name.tr}),
                 messageType: MessageTypes.success,
                 isDismissible: false);
           }
-          print("===============updateHistoryBasedOnItemType===========");
           await updateHistoryBasedOnItemType<T>();
           return false;
         }
@@ -543,13 +498,7 @@ class LoadingDataController extends GetxController {
   }
 
   saveInLocalDB<T>({List<T>? list}) async {
-    if (kDebugMode) {
-      print("===================saveInLocalDB==============");
-    }
     _instance = getLocalInstanceType<T>();
-    if (kDebugMode) {
-          print("===================getLocalInstanceType==============$_instance");
-        }
     if (list != null && list.isNotEmpty) {
       await _instance!.createList(recordsList: list);
       await _itemHistoryController.updateHistoryRecordOnFirstLogin<T>();
@@ -686,46 +635,27 @@ class LoadingDataController extends GetxController {
 
   // [ STEP (4) - UPDATE HISTORY BASED ON ITEM TYPE ] =================================================================
   updateHistoryBasedOnItemType<T>({bool returnDiffData = false}) async {
-    print(
-        "===========================updateHistoryBasedOnItemType============================");
     String typeNameX = getOdooModels<T>();
-    print(
-        "===========================getOdooModels============================");
 
     var result = await getFilteredHistory(
         excludeIds: <int>[SharedPr.currentPosObject!.id!], typeName: typeNameX);
-    print(
-        "===========================getFilteredHistory============================");
 
     if (result.status) {
-      print(
-          "===========================getFilteredHistory = true ============================");
 
       var data = await divideItemsBasedOnStatus<T>(
           itemsHistoryList: result, returnDiffData: returnDiffData);
-      print(
-          "===========================divideItemsBasedOnStatus ============================");
 
       if (returnDiffData) {
-        print(
-            "=========================== returnDiffDa ============================");
 
         return data;
       }
 
       if (!returnDiffData) {
-        print(
-            "=========================== !returnDiffData ============================");
+
         await updateItemHistoryRemotely(typeName: typeNameX);
-        print(
-            "=========================== updateItemHistoryRemotely ============================");
         await checkIsRegisteredController<T>();
-        print(
-            "=========================== checkIsRegisteredController ============================");
       }
     } else {
-      print(
-          "===========================getFilteredHistory = false ============================");
     }
   }
 

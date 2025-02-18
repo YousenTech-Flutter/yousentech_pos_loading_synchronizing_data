@@ -59,7 +59,6 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
   @override
   Future<dynamic> loadCustomerInfo() async {
     try {
-      print("===============loadCustomerInfo=========== ${OdooProjectOwnerConnectionHelper.odooClient}");
       var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
         'model': OdooModels.customer,
         'method': 'get_customers',
@@ -91,18 +90,12 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
           // 'order': 'id'
         },
       });
-      if (kDebugMode) {
-          print("===================CustomerInfo==============${result[0]}");
-        }
       return result.isEmpty
           ? <Customer>[]
           : (result as List)
               .map((e) => Customer.fromJson(e, fromLocal: false))
               .toList();
     } catch (e) {
-      if (kDebugMode) {
-          print("===================Customer catch### ==============$e");
-        }
       return handleException(
           exception: e, navigation: false, methodName: "loadCustomerInfo");
     }
