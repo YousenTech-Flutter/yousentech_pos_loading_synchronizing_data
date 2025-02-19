@@ -97,6 +97,7 @@ class LoadingSynchronizingDataService
               .map((e) => Customer.fromJson(e, fromLocal: false))
               .toList();
     } catch (e) {
+      print(e);
       return handleException(
           exception: e, navigation: false, methodName: "loadCustomerInfo");
     }
