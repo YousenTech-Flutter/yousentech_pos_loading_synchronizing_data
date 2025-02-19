@@ -21,7 +21,8 @@ import 'package:yousentech_pos_loading_synchronizing_data/loading_sync/utils/def
 import 'package:yousentech_pos_local_db/yousentech_pos_local_db.dart';
 import 'loading_synchronizing_data_repository.dart';
 
-class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository {
+class LoadingSynchronizingDataService
+    extends LoadingSynchronizingDataRepository {
   GeneralLocalDB? _instance;
 
   LoadingSynchronizingDataService({type}) {
@@ -44,7 +45,7 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
           'fields': [],
         },
       });
-      
+
       return result.isEmpty
           ? <PosSettingInfo>[]
           : (result as List).map((e) => PosSettingInfo.fromJson(e)).toList();
@@ -147,10 +148,10 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
             'street',
             'city',
             'country_id',
-            'Postal_code',
-            'District',
-            'additional_no',
-            'building_no',
+            'zip',
+            'street2',
+            'l10n_sa_additional_identification_number',
+            'l10n_sa_edi_building_number',
             'other_seller_id',
             'company_id',
             'is_company'
@@ -173,8 +174,7 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
         'model': OdooModels.posCategoryTransit,
         'method': 'get_translated_category_names',
         'args': [SharedPr.currentPosObject!.id],
-        'kwargs': {
-        },
+        'kwargs': {},
       });
       return result.isEmpty
           ? <PosCategory>[]
@@ -196,8 +196,7 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
         'model': OdooModels.uomUom,
         'method': 'get_translated_uom_names',
         'args': [],
-        'kwargs': {
-        },
+        'kwargs': {},
       });
       return result.isEmpty
           ? <ProductUnit>[]
@@ -217,8 +216,7 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
         'model': OdooModels.accountTaxTransit,
         'method': 'get_translated_account_tax_names',
         'args': [],
-        'kwargs': {
-        },
+        'kwargs': {},
       });
       return result.isEmpty
           ? <AccountTax>[]
@@ -237,8 +235,7 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
         'model': OdooModels.accountJournalTransit,
         'method': 'get_translated_account_journal_names',
         'args': [SharedPr.currentPosObject!.paymentTypeJournalId],
-        'kwargs': {
-        },
+        'kwargs': {},
       });
       return result.isEmpty
           ? <AccountJournal>[]
@@ -303,8 +300,7 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
         'model': item!['model'],
         'method': item['method'],
         'args': [SharedPr.currentPosObject!.id],
-        'kwargs': {
-        },
+        'kwargs': {},
       });
 
       return result;
@@ -423,13 +419,14 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
   //         exception: e, navigation: false, methodName: "getFilteredHistory");
   //   }
   // }
-    Future getFilteredHistory(
+  Future getFilteredHistory(
       {required List<int> excludeIds,
       required String typeName,
-      required int currentPosId, List<int>? productIds}) async {
+      required int currentPosId,
+      List<int>? productIds}) async {
     try {
       List paramsList = [excludeIds, typeName, SharedPr.currentPosObject!.id];
-      if(productIds != null) {
+      if (productIds != null) {
         paramsList.add(productIds);
       }
       var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
@@ -516,6 +513,7 @@ class LoadingSynchronizingDataService extends LoadingSynchronizingDataRepository
           exception: e, navigation: false, methodName: "getProductByIds");
     }
   }
+
   @override
   Future updateItemHistory({required String typeName, int? itemId}) async {
     try {
