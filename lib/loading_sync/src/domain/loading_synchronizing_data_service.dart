@@ -139,24 +139,24 @@ class LoadingSynchronizingDataService
           'domain': [
             ['company_id', '=', companyId],
           ],
-          'fields': [
-            'name',
-            'email',
-            'phone',
-            'customer_rank',
-            'image_1920',
-            'vat',
-            'street',
-            'city',
-            'country_id',
-            'zip',
-            'street2',
-            'l10n_sa_additional_identification_number',
-            'l10n_sa_edi_building_number',
-            'other_seller_id',
-            'company_id',
-            'is_company'
-          ],
+          // 'fields': [
+          //   'name',
+          //   'email',
+          //   'phone',
+          //   'customer_rank',
+          //   'image_1920',
+          //   'vat',
+          //   'street',
+          //   'city',
+          //   'country_id',
+          //   'zip',
+          //   'street2',
+          //   'l10n_sa_additional_identification_number',
+          //   'l10n_sa_edi_building_number',
+          //   'other_seller_id',
+          //   'company_id',
+          //   'is_company'
+          // ],
         },
       });
       return result == null || (result is List && result.isEmpty)
