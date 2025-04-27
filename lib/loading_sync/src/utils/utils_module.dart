@@ -2,7 +2,6 @@
 
 
 export 'customer_processor.dart';
-export 'definition_color_table.dart';
 export 'fail_loading_dialog.dart';
 export 'main_history_item_processor.dart';
 export 'pos_category_processor.dart';

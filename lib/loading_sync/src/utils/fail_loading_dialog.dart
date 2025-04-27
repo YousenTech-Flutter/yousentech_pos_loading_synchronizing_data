@@ -1,6 +1,6 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:shared_widgets/config/app_enum.dart';
+import 'package:shared_widgets/config/app_enums.dart';
 import 'package:shared_widgets/shared_widgets/app_dialog.dart';
 import 'package:yousentech_authentication/authentication/presentation/views/employees_list.dart';
 import 'package:yousentech_pos_dashboard/dashboard/src/presentation/views/home_page.dart';
@@ -13,6 +13,7 @@ void failLoadingDialog() {
       fontSizetext: 3.sp,
       dialogType: MessageTypes.error,
       icon: "assets/image/warning.svg",
+      
       buttonwidth: 80.w,
       primaryButtonText: 'retry',
       onPressed: () async {

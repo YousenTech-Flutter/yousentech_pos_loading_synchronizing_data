@@ -1,5 +1,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
+
 import 'dart:convert';
+
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -50,7 +52,7 @@ class LoadingSynchronizingDataService
           ? <PosSettingInfo>[]
           : (result as List).map((e) => PosSettingInfo.fromJson(e)).toList();
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e,
           navigation: false,
           methodName: "loadUserPosSettingInfo");
@@ -64,32 +66,7 @@ class LoadingSynchronizingDataService
         'model': OdooModels.customer,
         'method': 'get_customers',
         'args': [],
-        'kwargs': {
-          // 'context': {},
-          // 'domain': [
-          //   ['customer_rank', '>', 0],
-          //   ['active', '=', true],
-          // ],
-          // 'fields': [
-          //   'name',
-          //   'email',
-          //   'phone',
-          //   'customer_rank',
-          //   'image_1920',
-          //   'vat',
-          //   'street',
-          //   'city',
-          //   'country_id',
-          //   'Postal_code',
-          //   'District',
-          //   'additional_no',
-          //   'building_no',
-          //   'other_seller_id',
-          //   'company_id',
-          //   'is_company'
-          // ],
-          // 'order': 'id'
-        },
+        'kwargs': {},
       });
       return result.isEmpty
           ? <Customer>[]
@@ -97,8 +74,7 @@ class LoadingSynchronizingDataService
               .map((e) => Customer.fromJson(e, fromLocal: false))
               .toList();
     } catch (e) {
-      print(e);
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "loadCustomerInfo");
     }
   }
@@ -121,49 +97,28 @@ class LoadingSynchronizingDataService
       });
       return result == null ? null : PosSettingInfo.fromJson(result.first);
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e,
           navigation: false,
           methodName: "loadCurrentUserPosSettingInfo");
     }
   }
 
+  // @override
   Future<dynamic> loadCurrentCompany({required int companyId}) async {
     try {
       var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
         'model': OdooModels.customer,
-        'method': 'search_read',
-        'args': [],
+        'method': 'get_customers',
+        'args': [companyId],
         'kwargs': {
-          'context': {},
-          'domain': [
-            ['company_id', '=', companyId],
-          ],
-          // 'fields': [
-          //   'name',
-          //   'email',
-          //   'phone',
-          //   'customer_rank',
-          //   'image_1920',
-          //   'vat',
-          //   'street',
-          //   'city',
-          //   'country_id',
-          //   'zip',
-          //   'street2',
-          //   'l10n_sa_additional_identification_number',
-          //   'l10n_sa_edi_building_number',
-          //   'other_seller_id',
-          //   'company_id',
-          //   'is_company'
-          // ],
         },
       });
       return result == null || (result is List && result.isEmpty)
           ? null
           : Customer.fromJson(result.first, fromLocal: false);
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "loadCurrentCompany");
     }
   }
@@ -175,7 +130,8 @@ class LoadingSynchronizingDataService
         'model': OdooModels.posCategoryTransit,
         'method': 'get_translated_category_names',
         'args': [SharedPr.currentPosObject!.id],
-        'kwargs': {},
+        'kwargs': {
+        },
       });
       return result.isEmpty
           ? <PosCategory>[]
@@ -183,7 +139,7 @@ class LoadingSynchronizingDataService
               .map((e) => PosCategory.fromJson(e, fromPosCategoryModel: false))
               .toList();
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e,
           navigation: false,
           methodName: "loadPosCategoryBasedOnUser");
@@ -197,7 +153,8 @@ class LoadingSynchronizingDataService
         'model': OdooModels.uomUom,
         'method': 'get_translated_uom_names',
         'args': [],
-        'kwargs': {},
+        'kwargs': {
+        },
       });
       return result.isEmpty
           ? <ProductUnit>[]
@@ -205,19 +162,19 @@ class LoadingSynchronizingDataService
               .map((e) => ProductUnit.fromJson(e, fromLocal: false))
               .toList();
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "loadProductUnitData");
     }
   }
 
-  // @override
   Future loadAccountTaxData() async {
     try {
       var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
         'model': OdooModels.accountTaxTransit,
         'method': 'get_translated_account_tax_names',
         'args': [],
-        'kwargs': {},
+        'kwargs': {
+        },
       });
       return result.isEmpty
           ? <AccountTax>[]
@@ -225,7 +182,7 @@ class LoadingSynchronizingDataService
               .map((e) => AccountTax.fromJson(e, fromLocal: false))
               .toList();
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "loadAccountTaxData");
     }
   }
@@ -236,7 +193,8 @@ class LoadingSynchronizingDataService
         'model': OdooModels.accountJournalTransit,
         'method': 'get_translated_account_journal_names',
         'args': [SharedPr.currentPosObject!.paymentTypeJournalId],
-        'kwargs': {},
+        'kwargs': {
+        },
       });
       return result.isEmpty
           ? <AccountJournal>[]
@@ -244,7 +202,7 @@ class LoadingSynchronizingDataService
               .map((e) => AccountJournal.fromJson(e, fromLocal: false))
               .toList();
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e,
           navigation: false,
           methodName: "loadAccountJournalData");
@@ -272,7 +230,7 @@ class LoadingSynchronizingDataService
               .map((e) => PosSession.fromJson(e, fromLocal: false))
               .toList();
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "getAllPosSession");
     }
   }
@@ -301,12 +259,13 @@ class LoadingSynchronizingDataService
         'model': item!['model'],
         'method': item['method'],
         'args': [SharedPr.currentPosObject!.id],
-        'kwargs': {},
+        'kwargs': {
+        },
       });
 
       return result;
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e,
           navigation: true,
           methodName: "getItemCheckSumRemotely");
@@ -314,12 +273,14 @@ class LoadingSynchronizingDataService
   }
 
   String hashString(String inputString) {
+    // Convert the string to bytes, then hash
     var bytes = utf8.encode(inputString);
     var digest = md5.convert(bytes);
     return digest.toString();
   }
 
-  Future getCheckSumLocally<T>({required List<T> recordsList}) async {
+  Future getCheckSumLocally<T>(
+      {required List<T> recordsList, bool isRepModuleInstalled = false}) async {
     late String recordData, checksum;
     final List<String> listHashes = [];
     if (T == Product) {
@@ -344,14 +305,25 @@ class LoadingSynchronizingDataService
       }
     } else if (T == Customer) {
       for (Customer record in (recordsList as List<Customer>)) {
-        recordData =
-            '{"name": "${record.name}", "email": "${record.email ?? "False"}", "phone": "${record.phone ?? "False"}", "vat": "${record.vat ?? "False"}"}';
+        if(isRepModuleInstalled){
+          recordData ='{"name": "${record.name}", "email": "${record.email ?? "False"}", "phone": "${record.phone ?? ""}", "customer_rank": "${record.customerRank ?? "False"}", "image_1920": "${record.image ?? "False"}", "vat": "${record.vat ?? "False"}", "city": "${record.city ?? "False"}", "country_id": "${record.country?.countryId ?? "False"}", "company_id": "${record.companyId==0|| record.companyId==null? "False" :record.companyId }", "is_company": "${record.isCompany !=null ?capitalize(record.isCompany.toString()) : "False"}", "street": "${record.street ?? "False"}", "other_seller_id": "${record.otherSelleId ?? "False"}", "zip": "${record.postalCode ?? "False"}", "l10n_sa_additional_identification_number": "${record.additionalNo ?? "False"}", "l10n_sa_edi_building_number": "${record.buildingNo ?? "False"}", "street2": "${record.district ?? "False"}", "l10n_sa_edi_plot_identification": "${record.l10nSaEdiPlotIdentification ?? "False"}"}';
+
+        }
+        else{
+          recordData ='{"name": "${record.name}", "email": "${record.email ?? "False"}", "phone": "${record.phone ?? ""}", "customer_rank": "${record.customerRank ?? "False"}", "image_1920": "${record.image ?? "False"}", "vat": "${record.vat ?? "False"}", "city": "${record.city ?? "False"}", "country_id": "${record.country?.countryId ?? "False"}", "company_id": "${record.companyId==0|| record.companyId==null? "False" :record.companyId }", "is_company": "${record.isCompany !=null ?capitalize(record.isCompany.toString()) : "False"}", "street": "${record.street ?? "False"}", "other_seller_id": "${record.otherSelleId ?? "False"}", "Postal_code": "${record.postalCode ?? "False"}", "additional_no": "${record.additionalNo ?? "False"}", "building_no": "${record.buildingNo ?? "False"}", "District": "${record.district ?? "False"}"}';
+
+        }
+
+        if (kDebugMode) {
+          print(recordData);
+        }
         var digest = hashString(recordData);
         listHashes.add(digest.toString());
       }
     }
     listHashes.sort();
     checksum = md5.convert(utf8.encode(listHashes.join(''))).toString();
+
     return checksum;
   }
 
@@ -369,7 +341,7 @@ class LoadingSynchronizingDataService
           ? <Product>[]
           : (result as List).map<Product>((e) => Product.fromJson(e)).toList();
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e,
           navigation: false,
           methodName: "loadProductDataBasedOnPosCategory");
@@ -393,33 +365,12 @@ class LoadingSynchronizingDataService
           ? <int>[]
           : (result as List).map((e) => e["product_id"][0]).toList();
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "getProductHistory");
     }
   }
 
   @override
-  // Future getFilteredHistory(
-  //     {required List<int> excludeIds,
-  //     required String typeName,
-  //     required int currentPosId}) async {
-  //   try {
-  //     var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
-  //       'model': OdooModels.itemsHistory,
-  //       'method': 'get_filtered_history',
-  //       'args': [excludeIds, typeName, SharedPr.currentPosObject!.id],
-  //       'domain': [],
-  //       'kwargs': {},
-  //     });
-  //     return result.isEmpty || result == null
-  //         ? <BasicItemHistory>[]
-  //         : (result as List).map((e) => BasicItemHistory.fromJson(e)).toList();
-  //   } catch (e) {
-  //     // print("catch $e");
-  //     return handleException(
-  //         exception: e, navigation: false, methodName: "getFilteredHistory");
-  //   }
-  // }
   Future getFilteredHistory(
       {required List<int> excludeIds,
       required String typeName,
@@ -440,8 +391,9 @@ class LoadingSynchronizingDataService
       return result.isEmpty || result == null
           ? <BasicItemHistory>[]
           : (result as List).map((e) => BasicItemHistory.fromJson(e)).toList();
-    } catch (e) {
-      return handleException(
+    } 
+    catch (e) {
+      return await handleException(
           exception: e, navigation: false, methodName: "getFilteredHistory");
     }
   }
@@ -472,7 +424,7 @@ class LoadingSynchronizingDataService
           ? <BasicItemHistory>[]
           : (result as List).map((e) => BasicItemHistory.fromJson(e)).toList();
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "getFilteredHistory");
     }
   }
@@ -510,19 +462,17 @@ class LoadingSynchronizingDataService
           ? null
           : (result as List).map((e) => Product.fromJson(e)).toList();
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "getProductByIds");
     }
   }
+
 
   @override
   Future updateItemHistory({required String typeName, int? itemId}) async {
     try {
       var listToSend = [SharedPr.currentPosObject!.id, typeName];
       listToSend.addIf(itemId != null, itemId);
-      // if (kDebugMode) {
-      //   print(listToSend);
-      // }
       var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
         'model': OdooModels.itemsHistory,
         'method': 'bulk_update_used_by',
@@ -532,7 +482,7 @@ class LoadingSynchronizingDataService
 
       return result == null ? false : true;
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "updateItemHistory");
     }
   }
@@ -549,7 +499,7 @@ class LoadingSynchronizingDataService
 
       return result;
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "deleteProductHistory");
     }
   }
@@ -591,7 +541,7 @@ class LoadingSynchronizingDataService
         }
       }
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e,
           navigation: false,
           methodName: "refreshLocalDataFromRemoteServer");
@@ -604,7 +554,7 @@ class LoadingSynchronizingDataService
       List result = await _instance!.index();
       return result.isEmpty ? [] : result.map((e) => e.id).toList();
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "getLocal$T Ids");
     }
   }
@@ -627,10 +577,12 @@ class LoadingSynchronizingDataService
 
       return result;
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "getLocalData$T");
     }
   }
+
+
 
   Future getRemotProductIsNotIds(
       {required List<int> ids, required List<int> posCategoriesIds}) async {
@@ -653,7 +605,7 @@ class LoadingSynchronizingDataService
           ? null
           : result.map((e) => Product.fromJson(e, fromTemblet: true)).toList();
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e,
           navigation: false,
           methodName: "getRemotProductIsNotIds");
@@ -667,7 +619,7 @@ class LoadingSynchronizingDataService
       var result = await _instance!.checkIfThereIsRowsInTable();
       return result;
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "getCountLocal$T");
     }
   }
@@ -682,7 +634,7 @@ class LoadingSynchronizingDataService
       });
       return CountItems.fromJson(result);
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "countAll");
     }
   }
@@ -703,8 +655,12 @@ class LoadingSynchronizingDataService
           ? <BasicItemHistory>[]
           : (result as List).map((e) => BasicItemHistory.fromJson(e)).toList();
     } catch (e) {
-      return handleException(
+      return await handleException(
           exception: e, navigation: false, methodName: "getCountDeleteData");
     }
   }
+
+  String capitalize(String input) {
+  return input[0].toUpperCase() + input.substring(1);
+}
 }
