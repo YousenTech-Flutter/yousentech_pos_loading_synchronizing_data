@@ -189,7 +189,7 @@ class LoadingDataController extends GetxController {
   // # Output:
   // # - Updates UI states and saves product unit data into the local database.
 
-  Future<void> loadingProductUnit() async {
+  Future<void> loadingProductUnit({bool isUpdateAll= false}) async {
     int? count = await checkCount<ProductUnit>();
     List<ProductUnit> list = [];
     try {
@@ -209,6 +209,10 @@ class LoadingDataController extends GetxController {
         }
         loadTital.value = 'Completed';
         isLoad.value = false;
+      }
+      if(isUpdateAll && list is List && list.isNotEmpty){
+        _instance = GeneralLocalDB.getInstance<ProductUnit>(fromJsonFun: ProductUnit.fromJson);
+        await _instance!.deleteData();
       }
       await saveInLocalDB<ProductUnit>(list: list);
     } catch (e) {
@@ -369,7 +373,7 @@ class LoadingDataController extends GetxController {
   // # Output:
   // # - Updates the UI with appropriate loading states and saves the fetched data locally.
 
-  Future<void> loadingProduct({required List<int> posCategoriesIds}) async {
+  Future<void> loadingProduct({required List<int> posCategoriesIds, bool isUpdateAll = false}) async {
     int? count = await checkCount<Product>();
     List<Product> list = [];
     try {
@@ -395,6 +399,10 @@ class LoadingDataController extends GetxController {
         loadTital.value = 'Completed';
         isLoad.value = false;
       }
+      if(isUpdateAll && list is List && list.isNotEmpty){
+        _instance = GeneralLocalDB.getInstance<Product>(fromJsonFun: Product.fromJson);
+        await _instance!.deleteData();
+      }
       await saveInLocalDB<Product>(list: list);
     } catch (e) {
       isLoad.value = false;
@@ -415,7 +423,7 @@ class LoadingDataController extends GetxController {
   // # - Updates the UI with appropriate loading states and saves the fetched data locally.
 
   Future<void> loadingPosCategories(
-      {required List<int> posCategoriesIds}) async {
+      {required List<int> posCategoriesIds, bool isUpdateAll= false}) async {
     int? count = await checkCount<PosCategory>();
     List<PosCategory> list = [];
     try {
@@ -439,6 +447,10 @@ class LoadingDataController extends GetxController {
         loadTital.value = 'Completed';
         isLoad.value = false;
       }
+      if(isUpdateAll && list is List && list.isNotEmpty){
+        _instance = GeneralLocalDB.getInstance<PosCategory>(fromJsonFun: PosCategory.fromJson);
+        await _instance!.deleteData();
+      }
       await saveInLocalDB<PosCategory>(list: list);
     } catch (e) {
       isLoad.value = false;
@@ -457,7 +469,7 @@ class LoadingDataController extends GetxController {
   // # Output:
   // # - Updates the UI with loading states and saves the fetched customer data locally.
 
-  Future<void> loadingCustomer() async {
+  Future<void> loadingCustomer({bool isUpdateAll= false}) async {
     int? count = await checkCount<Customer>();
     List<Customer> list = [];
     try {
@@ -479,6 +491,10 @@ class LoadingDataController extends GetxController {
 
         loadTital.value = 'Completed';
         isLoad.value = false;
+      }
+       if(isUpdateAll && list is List && list.isNotEmpty){
+        _instance = GeneralLocalDB.getInstance<Customer>(fromJsonFun: Customer.fromJson);
+        await _instance!.deleteData();
       }
       await saveInLocalDB<Customer>(list: list);
     } catch (e) {
@@ -503,18 +519,17 @@ class LoadingDataController extends GetxController {
     Type typex = getModelClass(type);
     try {
       if (typex == Product) {
-        await loadingProduct(posCategoriesIds: posCategoryIdsList);
+        await loadingProduct(posCategoriesIds: posCategoryIdsList , isUpdateAll: true);
       } else if (typex == Customer) {
-        await loadingCustomer();
+        await loadingCustomer(isUpdateAll: true);
       } else if (typex == ProductUnit) {
-        await loadingProductUnit();
+        await loadingProductUnit(isUpdateAll: true);
       } else if (typex == PosCategory) {
-        await loadingPosCategories(posCategoriesIds: posCategoryIdsList);
+        await loadingPosCategories(posCategoriesIds: posCategoryIdsList,isUpdateAll: true);
       }
       return true;
     } catch (e) {
-      handleException(
-          exception: e, navigation: false, methodName: "loadingData $typex");
+      handleException(exception: e, navigation: false, methodName: "loadingData $typex");
     }
   }
 // # ===================================================== [ LOADING DATA ] =====================================================
