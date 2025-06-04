@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:pos_shared_preferences/models/account_journal/data/account_journal.dart';
 import 'package:pos_shared_preferences/models/account_tax/data/account_tax.dart';
 import 'package:pos_shared_preferences/models/basic_item_history.dart';
+import 'package:pos_shared_preferences/models/category_sale_price.dart';
 import 'package:pos_shared_preferences/models/count_items.dart';
 import 'package:pos_shared_preferences/models/customer_model.dart';
 import 'package:pos_shared_preferences/models/pos_categories_data/pos_category.dart';
@@ -15,6 +16,7 @@ import 'package:pos_shared_preferences/models/pos_session/posSession.dart';
 import 'package:pos_shared_preferences/models/pos_setting_info_model.dart';
 import 'package:pos_shared_preferences/models/product_data/product.dart';
 import 'package:pos_shared_preferences/models/product_unit/data/product_unit.dart';
+import 'package:pos_shared_preferences/models/user_sale_price.dart';
 import 'package:pos_shared_preferences/pos_shared_preferences.dart';
 import 'package:shared_widgets/config/app_odoo_models.dart';
 import 'package:shared_widgets/shared_widgets/handle_exception_helper.dart';
@@ -232,6 +234,57 @@ class LoadingSynchronizingDataService
     } catch (e) {
       return await handleException(
           exception: e, navigation: false, methodName: "getAllPosSession");
+    }
+  }
+
+    @override
+  Future loadUserSalePrices() async {
+    try {
+      var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
+        'model': OdooModels.userSalePrice,
+        'method': 'search_read',
+        'args': [],
+        'kwargs': {
+          'context': {},
+          'domain': [
+            // ['pos_id', '=', SharedPr.currentPosObject!.id],
+            ['user_id', '=', SharedPr.chosenUserObj!.id]
+          ],
+        },
+      });
+      return result.isEmpty || result == null
+          ? <UserSalePrice>[]
+          : (result as List)
+          .map((e) => UserSalePrice.fromJson(e, fromLocal: false))
+          .toList();
+    } catch (e) {
+      return await handleException(
+          exception: e, navigation: false, methodName: "getAllUserSalePrice");
+    }
+  }
+
+    @override
+  Future loadCategorySalePrices() async {
+    try {
+      var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
+        'model': OdooModels.categorySalePrice,
+        'method': 'search_read',
+        'args': [],
+        'kwargs': {
+          'context': {},
+          'domain': [
+            ['user_id', '=', SharedPr.chosenUserObj!.id]
+          ],
+        },
+      });
+      return result.isEmpty || result == null
+          ? <CategorySalePrice>[]
+          : (result as List)
+          .map((e) => CategorySalePrice.fromJson(e, fromLocal: false))
+          .toList();
+    } catch (e) {
+      return await handleException(
+          exception: e, navigation: false, methodName: "loadCategorySalePrice");
     }
   }
 

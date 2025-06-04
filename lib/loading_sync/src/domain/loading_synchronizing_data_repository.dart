@@ -24,5 +24,7 @@ abstract class LoadingSynchronizingDataRepository {
   Future getItemCheckSumRemotely<T>({required List<int> posCategoriesId});
   // Future getProductCheckSumLocally();
   Future loadPosSession();
+  Future loadUserSalePrices();
+  Future loadCategorySalePrices();
   Future<dynamic> loadCustomerInfo();
 }
