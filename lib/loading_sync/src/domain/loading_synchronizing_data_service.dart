@@ -14,6 +14,7 @@ import 'package:pos_shared_preferences/models/customer_model.dart';
 import 'package:pos_shared_preferences/models/pos_categories_data/pos_category.dart';
 import 'package:pos_shared_preferences/models/pos_session/posSession.dart';
 import 'package:pos_shared_preferences/models/pos_setting_info_model.dart';
+import 'package:pos_shared_preferences/models/printing_setting.dart';
 import 'package:pos_shared_preferences/models/product_data/product.dart';
 import 'package:pos_shared_preferences/models/product_unit/data/product_unit.dart';
 import 'package:pos_shared_preferences/models/user_sale_price.dart';
@@ -716,4 +717,30 @@ class LoadingSynchronizingDataService
   String capitalize(String input) {
   return input[0].toUpperCase() + input.substring(1);
 }
+
+
+  @override
+  Future loadPosPrinter() async {
+    try {
+      var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
+        'model': OdooModels.posPrinter,
+        'method': 'search_read',
+        'args': [],
+        'kwargs': {
+          'context': {},
+          'domain': [
+            ['pos_setting_id', '=', SharedPr.currentPosObject!.id!]
+          ],
+        },
+      });
+      return result.isEmpty || result == null
+          ? <PrintingSetting>[]
+          : (result as List)
+          .map((e) => PrintingSetting.fromJson(e))
+          .toList();
+    } catch (e) {
+      return await handleException(
+          exception: e, navigation: false, methodName: "loadPosPrinter");
+    }
+  }
 }

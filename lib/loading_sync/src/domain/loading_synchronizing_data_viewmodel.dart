@@ -16,6 +16,7 @@ import 'package:pos_shared_preferences/models/pos_categories_data/pos_category.d
 import 'package:pos_shared_preferences/models/pos_session/posSession.dart';
 import 'package:pos_shared_preferences/models/pos_setting_info_model.dart';
 import 'package:pos_shared_preferences/models/printing/data/printing_prefrences.dart';
+import 'package:pos_shared_preferences/models/printing_setting.dart';
 import 'package:pos_shared_preferences/models/product_data/product.dart';
 import 'package:pos_shared_preferences/models/product_unit/data/product_unit.dart';
 import 'package:pos_shared_preferences/models/user_sale_price.dart';
@@ -83,6 +84,7 @@ class LoadingDataController extends GetxController {
     await loadingAccountTax();
     await loadingAccountJournal();
     await loadingPosSession();
+    await loadingPosIPPrinter();
     if (!SharedPr.userObj!.isPriceControlModuleInstalled!) {
       await GeneralLocalDB.getInstance<UserSalePrice>(
               fromJsonFun: UserSalePrice.fromJson)!
@@ -143,10 +145,10 @@ class LoadingDataController extends GetxController {
         isDownloadPDF: result.isDownloadPDF,
         downloadPath: result.downloadPath,
         showPosPaymentSummary: result.showPosPaymentSummary,
-        disablePrinting:
-            result.printingMode == PrintingType.disable_printing.name
-                ? true
-                : false,
+        disablePrinting: result.disablePrinting
+            // result.printingMode == PrintingType.disable_printing.name
+            //     ? true
+            //     : false,
       ));
 
       var company = await loadingSynchronizingDataService.loadCurrentCompany(
@@ -744,6 +746,7 @@ class LoadingDataController extends GetxController {
     itemsList = await _instance!.index();
     if (T == Customer){
       isRepModuleInstalled = remoteCheckSum["is_rep_module_installed"];
+      await SharedPr.setModelL10nSaEdieInstall(flage:isRepModuleInstalled );
       remoteCheckSum = remoteCheckSum["checksum"];
     }
     if (remoteCheckSum is String) {
@@ -1438,4 +1441,45 @@ class LoadingDataController extends GetxController {
     }
   }
 // # ===================================================== [ UPDATE ALL ] =====================================================
+  Future<void> loadingPosIPPrinter() async {
+    List<PrintingSetting> list = [];
+    try {
+      isLoad.value = true;
+      loadTital.value = "Pos IP Printer Loading";
+      isLoadData.value = true;
+      final LoadingItemsCountController loadingItemsCountController = Get.put(LoadingItemsCountController());
+      loadingItemsCountController.resetLoadingItemCount();
+      lengthRemote.value = 0;
+      var result = await loadingSynchronizingDataService.loadPosPrinter();
+      isLoadData.value = false;
+      if (result is List) {
+        loadTital.value = "Create Pos IP Printer";
+        lengthRemote.value = result.length;
+        list = (result as List<PrintingSetting>);
+        _instance = GeneralLocalDB.getInstance<PrintingSetting>(
+            fromJsonFun: PrintingSetting.fromJson);
+        bool isExsit = await _instance!.checkIfTableExists();
+        if (!isExsit) {
+          await await _instance!.createTable(structure: LocalDatabaseStructure.posPrinterStructure);
+        }
+        await _instance!.deleteData();
+        if (list.isNotEmpty) {
+          await _instance!.createList(recordsList: list);
+        }
+      }
+      loadTital.value = 'Completed';
+      isLoad.value = false;
+    } catch (e) {
+      isLoad.value = false;
+      isLoadData.value = false;
+    }
+  }
+
+
+
+
+
+
 }
+
+
