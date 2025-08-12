@@ -11,6 +11,7 @@ import 'package:pos_shared_preferences/models/basic_item_history.dart';
 import 'package:pos_shared_preferences/models/category_sale_price.dart';
 import 'package:pos_shared_preferences/models/count_items.dart';
 import 'package:pos_shared_preferences/models/customer_model.dart';
+import 'package:pos_shared_preferences/models/general_settings.dart';
 import 'package:pos_shared_preferences/models/pos_categories_data/pos_category.dart';
 import 'package:pos_shared_preferences/models/pos_session/posSession.dart';
 import 'package:pos_shared_preferences/models/pos_setting_info_model.dart';
@@ -741,6 +742,28 @@ class LoadingSynchronizingDataService
     } catch (e) {
       return await handleException(
           exception: e, navigation: false, methodName: "loadPosPrinter");
+    }
+  }
+    @override
+  Future loadGeneralSettings() async {
+    try {
+      var result = await OdooProjectOwnerConnectionHelper.odooClient.callKw({
+        'model': OdooModels.resConfigSettings,
+        'method': 'search_read',
+        'args': [],
+        'kwargs': {
+            'domain': [],
+          'fields': ["maximum_invoice_cost","use_maximum_invoice_cost"],
+        },
+      });
+      return result.isEmpty || result == null
+          ? <GeneralSettings>[]
+          : (result as List)
+          .map((e) => GeneralSettings.fromJson(e))
+          .toList();
+    } catch (e) {
+      return await handleException(
+          exception: e, navigation: false, methodName: "loadGeneralSettings");
     }
   }
 }

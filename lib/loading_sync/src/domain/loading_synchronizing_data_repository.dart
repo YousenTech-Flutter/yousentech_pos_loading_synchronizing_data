@@ -28,4 +28,5 @@ abstract class LoadingSynchronizingDataRepository {
   Future loadCategorySalePrices();
   Future<dynamic> loadCustomerInfo();
   Future loadPosPrinter();
+  Future loadGeneralSettings();
 }

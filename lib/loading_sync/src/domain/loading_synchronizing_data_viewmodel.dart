@@ -85,6 +85,7 @@ class LoadingDataController extends GetxController {
     await loadingAccountJournal();
     await loadingPosSession();
     await loadingPosIPPrinter();
+    await loadingGeneralSettings();
     if (!SharedPr.userObj!.isPriceControlModuleInstalled!) {
       await GeneralLocalDB.getInstance<UserSalePrice>(
               fromJsonFun: UserSalePrice.fromJson)!
@@ -1476,7 +1477,29 @@ class LoadingDataController extends GetxController {
   }
 
 
+  Future<void> loadingGeneralSettings() async {
 
+    try {
+      isLoad.value = true;
+      loadTital.value = "General Settings";
+      isLoadData.value = true;
+      final LoadingItemsCountController loadingItemsCountController = Get.put(LoadingItemsCountController());
+      loadingItemsCountController.resetLoadingItemCount();
+      lengthRemote.value = 0;
+      var result = await loadingSynchronizingDataService.loadGeneralSettings();
+      isLoadData.value = false;
+      if (result is List) {
+        loadTital.value = "Create General Settings";
+        lengthRemote.value = result.length;
+        await SharedPr.setGeneralSettingsObj(generalSettings: result[0]);
+      }
+      loadTital.value = 'Completed';
+      isLoad.value = false;
+    } catch (e) {
+      isLoad.value = false;
+      isLoadData.value = false;
+    }
+  }
 
 
 
