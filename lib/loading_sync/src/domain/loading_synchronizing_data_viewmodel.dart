@@ -132,24 +132,43 @@ class LoadingDataController extends GetxController {
         .loadCurrentUserPosSettingInfo(posSettingId: posSettingId);
     if (result is PosSettingInfo) {
       await SharedPr.setCurrentPosObj(posObject: result);
+      // await SharedPr.setPrintingPreferenceObj(
+      //     printingPreferenceObj: PrintingPreference(
+      //   showPreview: result.showPreview,
+      //   isSilentPrinting:
+      //       result.printingMode == PrintingType.is_silent_printing.name
+      //           ? true
+      //           : false,
+      //   isShowPrinterDialog:
+      //       result.printingMode == PrintingType.is_show_printer_dialog.name
+      //           ? true
+      //           : false,
+      //   isDownloadPDF: result.isDownloadPDF,
+      //   downloadPath: result.downloadPath,
+      //   showPosPaymentSummary: result.showPosPaymentSummary,
+      //   disablePrinting: result.disablePrinting
+      //       // result.printingMode == PrintingType.disable_printing.name
+      //       //     ? true
+      //       //     : false,
+      // ));
       await SharedPr.setPrintingPreferenceObj(
           printingPreferenceObj: PrintingPreference(
         showPreview: result.showPreview,
-        isSilentPrinting:
-            result.printingMode == PrintingType.is_silent_printing.name
-                ? true
-                : false,
-        isShowPrinterDialog:
-            result.printingMode == PrintingType.is_show_printer_dialog.name
-                ? true
-                : false,
+        // isSilentPrinting:
+        //     result.printingMode == PrintingType.is_silent_printing.name
+        //         ? true
+        //         : false,
+        // isShowPrinterDialog:
+        //     result.printingMode == PrintingType.is_show_printer_dialog.name
+        //         ? true
+        //         : false,
         isDownloadPDF: result.isDownloadPDF,
         downloadPath: result.downloadPath,
         showPosPaymentSummary: result.showPosPaymentSummary,
-        disablePrinting: result.disablePrinting
-            // result.printingMode == PrintingType.disable_printing.name
-            //     ? true
-            //     : false,
+        // disablePrinting: result.disablePrinting
+        //     result.printingMode == PrintingType.disable_printing.name
+        //         ? true
+        //         : false,
       ));
 
       var company = await loadingSynchronizingDataService.loadCurrentCompany(
