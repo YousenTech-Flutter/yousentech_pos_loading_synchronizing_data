@@ -43,6 +43,10 @@ dependencies:
     git:
       url: https://github.com/YousenTech-Flutter/yousentech_pos_invoice_printing.git
       ref: master
+  yousentech_pos_invoice:
+    git:
+      url: https://github.com/YousenTech-Flutter/yousentech_pos_invoice.git
+      ref: master
   crypto: ^3.0.3
   flutter_screenutil: ^5.9.3
   connectivity_plus: ^6.0.3
@@ -51,7 +55,8 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^5.0.0
 dependency_overrides:
-  network_info_plus: ^4.0.2 
+  network_info_plus: ^4.0.2
+  fl_chart: ^0.69.0 
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
