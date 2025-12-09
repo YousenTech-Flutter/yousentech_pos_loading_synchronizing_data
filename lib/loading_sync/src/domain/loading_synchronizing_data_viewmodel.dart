@@ -736,9 +736,10 @@ class LoadingDataController extends GetxController {
         return 'no_connection'.tr;
       }
     } catch (e) {
-      return [];
+      return e.toString();
     }
-    return [];
+
+    // return [];
   }
 //   # ===================================================== [ DISPLAY ALL ] =====================================================
 
