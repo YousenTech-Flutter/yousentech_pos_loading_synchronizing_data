@@ -12,6 +12,7 @@ import 'package:pos_shared_preferences/models/basic_item_history.dart';
 import 'package:pos_shared_preferences/models/category_sale_price.dart';
 import 'package:pos_shared_preferences/models/count_items.dart';
 import 'package:pos_shared_preferences/models/customer_model.dart';
+import 'package:pos_shared_preferences/models/invoice_setting.dart';
 import 'package:pos_shared_preferences/models/pos_categories_data/pos_category.dart';
 import 'package:pos_shared_preferences/models/pos_session/posSession.dart';
 import 'package:pos_shared_preferences/models/pos_setting_info_model.dart';
@@ -170,7 +171,10 @@ class LoadingDataController extends GetxController {
         //         ? true
         //         : false,
       ));
-
+      await SharedPr.setInvoiceSettingObj(
+          setting: InvoiceSetting(
+              showOrderType: result.enableOrderType,
+              showOrderCardCount: result.enableOrderCardCount));
       var company = await loadingSynchronizingDataService.loadCurrentCompany(
           companyId: SharedPr.currentPosObject!.companyId!);
       if (company != null && company is Customer) {
@@ -234,14 +238,16 @@ class LoadingDataController extends GetxController {
         loadTital.value = "Product Unit Loading";
         isLoadData.value = true;
         lengthRemote.value = 0;
-        final LoadingItemsCountController loadingItemsCountController = Get.put(LoadingItemsCountController());
+        final LoadingItemsCountController loadingItemsCountController =
+            Get.put(LoadingItemsCountController());
         loadingItemsCountController.resetLoadingItemCount();
-        var result  = await loadingSynchronizingDataService.loadProductUnitData();
+        var result =
+            await loadingSynchronizingDataService.loadProductUnitData();
         isLoadData.value = false;
         if (result is List) {
           loadTital.value = "Create Product Unit";
           lengthRemote.value = result.length;
-          list = (result as List<ProductUnit>) ;
+          list = (result as List<ProductUnit>);
         }
         loadTital.value = 'Completed';
         isLoad.value = false;
@@ -323,7 +329,8 @@ class LoadingDataController extends GetxController {
         final LoadingItemsCountController loadingItemsCountController =
             Get.put(LoadingItemsCountController());
         loadingItemsCountController.resetLoadingItemCount();
-        var result = await loadingSynchronizingDataService.loadAccountJournalData();
+        var result =
+            await loadingSynchronizingDataService.loadAccountJournalData();
         isLoadData.value = false;
         if (result is List) {
           list = (result as List<AccountJournal>);
@@ -366,10 +373,11 @@ class LoadingDataController extends GetxController {
       loadTital.value = "Pos Session Loading";
       isLoadData.value = true;
 
-      final LoadingItemsCountController loadingItemsCountController = Get.put(LoadingItemsCountController());
+      final LoadingItemsCountController loadingItemsCountController =
+          Get.put(LoadingItemsCountController());
       loadingItemsCountController.resetLoadingItemCount();
       lengthRemote.value = 0;
-      var reslut  = await loadingSynchronizingDataService.loadPosSession();
+      var reslut = await loadingSynchronizingDataService.loadPosSession();
       isLoadData.value = false;
       if (reslut is List) {
         loadTital.value = "Create Pos Session";
@@ -379,7 +387,7 @@ class LoadingDataController extends GetxController {
         await _instance!.deleteData();
         // print("list.isNotEmpty :: ${list.isNotEmpty}");
         if (reslut.isNotEmpty) {
-          list =(reslut as List<PosSession> );
+          list = (reslut as List<PosSession>);
           await _instance!.createList(recordsList: list);
           var currentSaleSession = list
               .where((e) => e.userOpenId == SharedPr.chosenUserObj!.id)
@@ -413,7 +421,8 @@ class LoadingDataController extends GetxController {
   // # Output:
   // # - Updates the UI with appropriate loading states and saves the fetched data locally.
 
-  Future<void> loadingProduct({required List<int> posCategoriesIds, bool isUpdateAll = false}) async {
+  Future<void> loadingProduct(
+      {required List<int> posCategoriesIds, bool isUpdateAll = false}) async {
     List<Product> list = [];
     int? count = await checkCount<Product>();
     try {
@@ -425,7 +434,9 @@ class LoadingDataController extends GetxController {
             Get.put(LoadingItemsCountController());
         loadingItemsCountController.resetLoadingItemCount();
         lengthRemote.value = 0;
-        var result = await loadingSynchronizingDataService.loadProductDataBasedOnPosCategory(posCategoriesIds: posCategoriesIds);
+        var result = await loadingSynchronizingDataService
+            .loadProductDataBasedOnPosCategory(
+                posCategoriesIds: posCategoriesIds);
         if (result is List) {
           loadTital.value = "Create Product";
           lengthRemote.value = result.length;
@@ -437,7 +448,8 @@ class LoadingDataController extends GetxController {
         isLoad.value = false;
       }
       if (isUpdateAll && list.isNotEmpty) {
-        _instance = GeneralLocalDB.getInstance<Product>(fromJsonFun: Product.fromJson);
+        _instance =
+            GeneralLocalDB.getInstance<Product>(fromJsonFun: Product.fromJson);
         await _instance!.deleteData();
       }
       await saveInLocalDB<Product>(list: list);
@@ -459,7 +471,8 @@ class LoadingDataController extends GetxController {
   // # Output:
   // # - Updates the UI with appropriate loading states and saves the fetched data locally.
 
-  Future<void> loadingPosCategories({required List<int> posCategoriesIds, bool isUpdateAll = false}) async {
+  Future<void> loadingPosCategories(
+      {required List<int> posCategoriesIds, bool isUpdateAll = false}) async {
     int? count = await checkCount<PosCategory>();
     List<PosCategory> list = [];
     try {
@@ -471,7 +484,8 @@ class LoadingDataController extends GetxController {
             Get.put(LoadingItemsCountController());
         loadingItemsCountController.resetLoadingItemCount();
         lengthRemote.value = 0;
-        var result  = await loadingSynchronizingDataService.loadPosCategoryBasedOnUser();
+        var result =
+            await loadingSynchronizingDataService.loadPosCategoryBasedOnUser();
 
         isLoadData.value = false;
         if (result is List) {
@@ -513,7 +527,8 @@ class LoadingDataController extends GetxController {
         isLoad.value = true;
         loadTital.value = "Customer Loading";
         isLoadData.value = true;
-        final LoadingItemsCountController loadingItemsCountController = Get.put(LoadingItemsCountController());
+        final LoadingItemsCountController loadingItemsCountController =
+            Get.put(LoadingItemsCountController());
         loadingItemsCountController.resetLoadingItemCount();
         lengthRemote.value = 0;
         var result = await loadingSynchronizingDataService.loadCustomerInfo();
@@ -591,13 +606,15 @@ class LoadingDataController extends GetxController {
           Get.put(LoadingItemsCountController());
       loadingItemsCountController.resetLoadingItemCount();
       lengthRemote.value = 0;
-      var result = await loadingSynchronizingDataService.loadCategorySalePrices();
+      var result =
+          await loadingSynchronizingDataService.loadCategorySalePrices();
       isLoadData.value = false;
       if (result is List) {
         loadTital.value = "Create Category Sale Prices";
         lengthRemote.value = result.length;
         list = (result as List<CategorySalePrice>);
-        _instance = GeneralLocalDB.getInstance<CategorySalePrice>(fromJsonFun: CategorySalePrice.fromJson);
+        _instance = GeneralLocalDB.getInstance<CategorySalePrice>(
+            fromJsonFun: CategorySalePrice.fromJson);
         bool isExsit = await _instance!.checkIfTableExists();
         if (!isExsit) {
           await UserSalePriceService.getInstance().createTable();
@@ -617,11 +634,6 @@ class LoadingDataController extends GetxController {
   }
 //   # ===================================================== [ LOADING Category SALE Prices ] =====================================================
 
-
-
-
-
-
 // # ===================================================== [ LOADING DATA ] =====================================================
   // # Functionality:
   // # - This function handles the dynamic loading of data based on the type passed as an argument.
@@ -637,17 +649,20 @@ class LoadingDataController extends GetxController {
     Type typex = getModelClass(type);
     try {
       if (typex == Product) {
-        await loadingProduct(posCategoriesIds: posCategoryIdsList , isUpdateAll: true);
+        await loadingProduct(
+            posCategoriesIds: posCategoryIdsList, isUpdateAll: true);
       } else if (typex == Customer) {
         await loadingCustomer(isUpdateAll: true);
       } else if (typex == ProductUnit) {
         await loadingProductUnit(isUpdateAll: true);
       } else if (typex == PosCategory) {
-        await loadingPosCategories(posCategoriesIds: posCategoryIdsList,isUpdateAll: true);
+        await loadingPosCategories(
+            posCategoriesIds: posCategoryIdsList, isUpdateAll: true);
       }
       return true;
     } catch (e) {
-      handleException(exception: e, navigation: false, methodName: "loadingData $typex");
+      handleException(
+          exception: e, navigation: false, methodName: "loadingData $typex");
     }
   }
 // # ===================================================== [ LOADING DATA ] =====================================================
@@ -765,13 +780,16 @@ class LoadingDataController extends GetxController {
     _instance = getLocalInstanceType<T>();
 
     itemsList = await _instance!.index();
-    if (T == Customer){
+    if (T == Customer) {
       isRepModuleInstalled = remoteCheckSum["is_rep_module_installed"];
-      await SharedPr.setModelL10nSaEdieInstall(flage:isRepModuleInstalled );
+      await SharedPr.setModelL10nSaEdieInstall(flage: isRepModuleInstalled);
       remoteCheckSum = remoteCheckSum["checksum"];
     }
     if (remoteCheckSum is String) {
-      var localChecksum = await loadingSynchronizingDataService.getCheckSumLocally<T>(recordsList: itemsList , isRepModuleInstalled:isRepModuleInstalled );
+      var localChecksum =
+          await loadingSynchronizingDataService.getCheckSumLocally<T>(
+              recordsList: itemsList,
+              isRepModuleInstalled: isRepModuleInstalled);
       if (localChecksum is String) {
         if (remoteCheckSum == localChecksum) {
           return true;
@@ -1461,6 +1479,7 @@ class LoadingDataController extends GetxController {
       return e.toString();
     }
   }
+
 // # ===================================================== [ UPDATE ALL ] =====================================================
   Future<void> loadingPosIPPrinter() async {
     List<PrintingSetting> list = [];
@@ -1468,7 +1487,8 @@ class LoadingDataController extends GetxController {
       isLoad.value = true;
       loadTital.value = "Pos IP Printer Loading";
       isLoadData.value = true;
-      final LoadingItemsCountController loadingItemsCountController = Get.put(LoadingItemsCountController());
+      final LoadingItemsCountController loadingItemsCountController =
+          Get.put(LoadingItemsCountController());
       loadingItemsCountController.resetLoadingItemCount();
       lengthRemote.value = 0;
       var result = await loadingSynchronizingDataService.loadPosPrinter();
@@ -1481,7 +1501,8 @@ class LoadingDataController extends GetxController {
             fromJsonFun: PrintingSetting.fromJson);
         bool isExsit = await _instance!.checkIfTableExists();
         if (!isExsit) {
-          await await _instance!.createTable(structure: LocalDatabaseStructure.posPrinterStructure);
+          await await _instance!.createTable(
+              structure: LocalDatabaseStructure.posPrinterStructure);
         }
         await _instance!.deleteData();
         if (list.isNotEmpty) {
@@ -1496,14 +1517,13 @@ class LoadingDataController extends GetxController {
     }
   }
 
-
   Future<void> loadingGeneralSettings() async {
-
     try {
       isLoad.value = true;
       loadTital.value = "General Settings";
       isLoadData.value = true;
-      final LoadingItemsCountController loadingItemsCountController = Get.put(LoadingItemsCountController());
+      final LoadingItemsCountController loadingItemsCountController =
+          Get.put(LoadingItemsCountController());
       loadingItemsCountController.resetLoadingItemCount();
       lengthRemote.value = 0;
       var result = await loadingSynchronizingDataService.loadGeneralSettings();
@@ -1520,9 +1540,4 @@ class LoadingDataController extends GetxController {
       isLoadData.value = false;
     }
   }
-
-
-
 }
-
-
