@@ -174,6 +174,7 @@ class LoadingDataController extends GetxController {
       var invoiceSettingItems = SharedPr.invoiceSetting ?? InvoiceSetting();
       invoiceSettingItems.showOrderType = result.enableOrderType;
       invoiceSettingItems.showOrderCardCount = result.enableOrderCardCount;
+      invoiceSettingItems.orderTypeMode = result.orderTypeMode;
       await SharedPr.setInvoiceSettingObj(setting: invoiceSettingItems);
       var company = await loadingSynchronizingDataService.loadCurrentCompany(
           companyId: SharedPr.currentPosObject!.companyId!);
