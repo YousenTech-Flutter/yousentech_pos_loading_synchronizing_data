@@ -63,9 +63,7 @@ class LoadingDataController extends GetxController {
       LoadingSynchronizingDataService();
   List<int> posCategoryIdsList = [];
   final ItemHistoryController _itemHistoryController = ItemHistoryController();
-  LoadingDataController() {
-    print("🚀 LoadingDataController تم استدعاؤه من: ${StackTrace.current}");
-  }
+
   @override
   Future<void> onInit() async {
     super.onInit();
