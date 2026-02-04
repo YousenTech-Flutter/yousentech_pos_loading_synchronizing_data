@@ -68,17 +68,11 @@ class LoadingDataController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     try {
-      print("=================huda000");
       await loadingPosCategoryIdsList();
-      print("=================huda111");
       await executeLoadingProcessBasedOnType();
-      print("=================huda222");
       update(['loading']);
-      print("=================huda333");
     } catch (e) {
-      print("=================huda444");
       failLoadingDialog();
-      print("=================huda555");
     }
   }
 
