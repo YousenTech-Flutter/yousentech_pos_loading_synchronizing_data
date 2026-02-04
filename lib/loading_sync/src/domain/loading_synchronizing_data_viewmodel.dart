@@ -455,8 +455,9 @@ class LoadingDataController extends GetxController {
       }
       await saveInLocalDB<Product>(list: list);
     } catch (e) {
-      isLoad.value = false;
-      isLoadData.value = false;
+      print("loadingProduct===========$e");
+      // isLoad.value = false;
+      // isLoadData.value = false;
     }
   }
 //   # ===================================================== [ LOADING PRODUCTS BASED ON POS CATEGORY ] =====================================================
