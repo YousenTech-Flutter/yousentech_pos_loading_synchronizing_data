@@ -76,7 +76,9 @@ class LoadingDataController extends GetxController {
       update(['loading']);
       print("=================huda333");
     } catch (e) {
+      print("=================huda444");
       failLoadingDialog();
+      print("=================huda555");
     }
   }
 
