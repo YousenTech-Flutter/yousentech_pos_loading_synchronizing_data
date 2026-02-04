@@ -68,10 +68,13 @@ class LoadingDataController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     try {
+      print("=================huda000");
       await loadingPosCategoryIdsList();
+      print("=================huda111");
       await executeLoadingProcessBasedOnType();
-
+      print("=================huda222");
       update(['loading']);
+      print("=================huda333");
     } catch (e) {
       failLoadingDialog();
     }
@@ -455,9 +458,8 @@ class LoadingDataController extends GetxController {
       }
       await saveInLocalDB<Product>(list: list);
     } catch (e) {
-      print("loadingProduct===========$e");
-      // isLoad.value = false;
-      // isLoadData.value = false;
+      isLoad.value = false;
+      isLoadData.value = false;
     }
   }
 //   # ===================================================== [ LOADING PRODUCTS BASED ON POS CATEGORY ] =====================================================
