@@ -46,8 +46,7 @@ void failLoadingDialog() {
           baseSize: Size(context.setWidth(454.48), context.setHeight(350)),
           width: context.setWidth(454.48),
           height: context.setHeight(350),
-          child: Obx(
-            () => SizedBox(
+          child: SizedBox(
               width: context.setWidth(80),
               height: context.setHeight(350),
               child: Padding(
@@ -139,7 +138,7 @@ void failLoadingDialog() {
                 ),
               ),
             ),
-          ),
+          
         );
       },
     ),
