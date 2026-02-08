@@ -165,6 +165,7 @@ class LoadingDataController extends GetxController {
         isDownloadPDF: result.isDownloadPDF,
         downloadPath: result.downloadPath,
         showPosPaymentSummary: result.showPosPaymentSummary,
+        paperType: SharedPr.printingPreferenceObj?.paperType
         // disablePrinting: result.disablePrinting
         //     result.printingMode == PrintingType.disable_printing.name
         //         ? true
