@@ -1457,7 +1457,8 @@ class LoadingDataController extends GetxController {
         }
 
         _instance = getLocalInstanceTypeByName(name: name);
-        await _instance!.deleteData();
+        // وقفته علشان لو ماشي بيانات او فيه خطا ما يظهر مشاكل وما يحذف البيانات الموجوده
+        // await _instance!.deleteData();
         await loadingPosCategoryIdsList();
         bool result = await loadingData(type: name);
         isUpdate.value = false;
